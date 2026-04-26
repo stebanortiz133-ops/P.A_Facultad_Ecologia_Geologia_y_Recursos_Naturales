@@ -1,0 +1,1773 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programa Arquitectónico — Facultad 1: Ecología, Geología y Recursos Naturales</title>
+<style>
+/* ═══ TOKENS ═══ */
+:root{
+  --navy:#1B3A5C; --navy2:#2B4F76; --steel:#4A6D8C;
+  --light:#E8EEF4; --gold:#D4A017; --green:#27AE60;
+  --orange:#E67E22; --red:#C0392B; --gray:#F4F7FB;
+  --text:#1A1A2E; --border:#DEE5EF;
+  --fac:#1B5C2E; /* verde bosque — color facultad */
+  --fac2:#2B7A3F; --fac3:#3A9E56;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Trebuchet MS',sans-serif;background:var(--gray);color:var(--text);min-height:100vh;font-size:12px}
+@media print{body{background:#fff;font-size:10px}}
+
+/* ═══ HEADER ═══ */
+.cover{background:linear-gradient(135deg,var(--fac) 0%,var(--navy) 100%);color:#fff;
+  padding:40px 48px 36px;position:relative;overflow:hidden;page-break-after:always}
+.cover::before{content:'';position:absolute;top:-60%;right:-5%;width:500px;height:500px;
+  border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.06),transparent 65%);pointer-events:none}
+.cover-num{font-size:80px;font-weight:900;font-family:Georgia,serif;color:rgba(255,255,255,.07);
+  line-height:1;margin-bottom:-20px}
+.cover-super{font-size:10px;letter-spacing:3px;color:rgba(255,255,255,.55);margin-bottom:8px;text-transform:uppercase}
+.cover-title{font-size:32px;font-weight:700;font-family:Georgia,serif;line-height:1.2;margin-bottom:6px}
+.cover-sub{font-size:12px;color:rgba(255,255,255,.65);letter-spacing:1px;margin-bottom:20px}
+.cover-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.chip{font-size:9px;font-weight:700;padding:4px 12px;border-radius:20px;letter-spacing:1px;
+  border:1px solid rgba(255,255,255,.3);color:rgba(255,255,255,.8)}
+.chip.gold{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+.cover-meta{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:28px;
+  padding-top:24px;border-top:1px solid rgba(255,255,255,.2)}
+.cm{text-align:center}
+.cm-v{font-size:22px;font-weight:800;font-family:Georgia,serif;color:var(--gold)}
+.cm-l{font-size:9px;color:rgba(255,255,255,.6);margin-top:3px;letter-spacing:.5px}
+
+/* ═══ NAVIGATION ═══ */
+.nav{background:var(--fac);position:sticky;top:0;z-index:90;display:flex;overflow-x:auto;
+  box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.nav a{padding:11px 18px;font-size:9px;font-weight:700;letter-spacing:1.5px;white-space:nowrap;
+  color:rgba(255,255,255,.55);text-decoration:none;border-bottom:3px solid transparent;transition:all .2s;
+  display:flex;align-items:center;gap:6px}
+.nav a:hover,.nav a.active{color:#fff;border-bottom-color:var(--gold)}
+
+/* ═══ MAIN CONTENT ═══ */
+.cnt{max-width:1400px;margin:0 auto;padding:32px 48px 60px}
+
+/* ═══ SECTION ═══ */
+.section{margin-bottom:48px;page-break-inside:avoid}
+.sec-header{display:flex;align-items:flex-end;gap:14px;margin-bottom:24px;
+  padding-bottom:12px;border-bottom:2px solid var(--fac)}
+.sec-num{font-size:40px;font-weight:900;color:var(--fac);font-family:Georgia,serif;
+  opacity:.35;line-height:1}
+.sec-title{font-size:18px;font-weight:700;color:var(--fac);font-family:Georgia,serif}
+.sec-sub{font-size:10px;color:var(--steel);letter-spacing:1.5px;margin-top:2px;text-transform:uppercase}
+
+/* ═══ CARD ═══ */
+.card{background:#fff;border:1px solid var(--border);padding:20px;margin-bottom:18px;
+  transition:box-shadow .2s;border-radius:2px}
+.card:hover{box-shadow:0 3px 14px rgba(27,58,92,.08)}
+.card-title{font-size:10px;font-weight:700;color:var(--fac);letter-spacing:2px;
+  text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card-title::after{content:'';flex:1;height:1px;background:var(--light)}
+
+/* ═══ JUSTIFICACIÓN ═══ */
+.justif{background:rgba(27,92,46,.06);border-left:4px solid var(--fac);
+  padding:14px 18px;margin-bottom:18px;border-radius:0 4px 4px 0}
+.justif-t{font-size:9px;font-weight:700;color:var(--fac);letter-spacing:2px;margin-bottom:6px}
+.justif p{font-size:11px;line-height:1.8;color:var(--text)}
+
+/* ═══ PROGRAMA TABLE ═══ */
+.prog-table-wrap{overflow-x:auto;margin-bottom:8px;border-radius:2px;
+  border:1px solid var(--border)}
+.prog-table{width:100%;border-collapse:collapse;font-size:10.5px}
+.prog-table thead tr{background:var(--fac);color:#fff}
+.prog-table thead th{padding:9px 12px;text-align:left;font-size:9px;letter-spacing:1px;
+  font-weight:700;white-space:nowrap}
+.prog-table thead th.td-c{text-align:center}
+.prog-table tbody tr{border-bottom:1px solid var(--border);transition:background .12s}
+.prog-table tbody tr:hover{background:#F0F7F2}
+.prog-table tbody tr:nth-child(even){background:#FAFCFB}
+.prog-table tbody tr:nth-child(even):hover{background:#EEF6F0}
+.prog-table td{padding:7px 12px;vertical-align:top}
+.td-n{font-weight:600;color:var(--navy)}
+.td-c{text-align:center}
+.td-r{text-align:right}
+.td-bold{font-weight:700}
+/* subzone header */
+.sz-row td{background:var(--fac2)!important;color:#fff;font-weight:700;font-size:9px;
+  letter-spacing:1.5px;text-transform:uppercase;padding:6px 12px}
+/* zone header */
+.zone-row td{background:var(--fac)!important;color:#fff;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;padding:8px 12px;font-size:10px}
+/* subtotal */
+.st-row td{background:#E8F4EC!important;font-weight:700;color:var(--fac);
+  border-top:2px solid var(--fac3)}
+/* total */
+.tot-row td{background:var(--fac)!important;color:#fff;font-weight:700;font-size:11px;
+  border-top:3px solid var(--gold)}
+/* shared badge */
+.shared{font-size:8px;background:var(--gold);color:var(--navy);border-radius:3px;
+  padding:1px 6px;font-weight:700;margin-left:4px;vertical-align:middle;white-space:nowrap}
+
+/* ═══ BADGE ═══ */
+.badge{border-radius:3px;padding:2px 8px;font-size:9px;font-weight:700;color:#fff;display:inline-block}
+.b-fac{background:var(--fac)}.b-green{background:var(--green)}.b-orange{background:var(--orange)}
+.b-red{background:var(--red)}.b-steel{background:var(--steel)}.b-gold{background:var(--gold);color:var(--navy)}
+.b-navy{background:var(--navy)}
+.b-share{background:var(--gold);color:var(--navy)}
+
+/* ═══ SOURCE ═══ */
+.src{font-size:9px;color:#7A8FA6;margin-top:6px;font-style:italic}
+
+/* ═══ GRIDS ═══ */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:18px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+
+/* ═══ KPI RESUMEN ═══ */
+.kpi-prog{background:#fff;border:1px solid var(--border);padding:16px;text-align:center;
+  border-top:3px solid var(--fac)}
+.kpi-v{font-size:24px;font-weight:800;color:var(--fac);font-family:Georgia,serif}
+.kpi-l{font-size:10px;font-weight:700;color:var(--text);margin-top:4px}
+.kpi-s{font-size:9px;color:var(--steel);margin-top:2px}
+
+/* ═══ ORGANIGRAMA ═══ */
+.organo-wrap{background:#fff;border:1px solid var(--border);padding:24px;margin-bottom:18px}
+.org-title{font-size:10px;font-weight:700;color:var(--fac);letter-spacing:2px;
+  text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.org-title::after{content:'';flex:1;height:1px;background:var(--light)}
+
+/* Nodos del organigrama */
+.org-tree{display:flex;flex-direction:column;align-items:center;gap:0}
+.org-level{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;position:relative;margin-bottom:0}
+.org-node{display:flex;flex-direction:column;align-items:center}
+.org-box{padding:8px 14px;border-radius:4px;font-size:9px;font-weight:700;text-align:center;
+  min-width:110px;max-width:160px;letter-spacing:.5px;line-height:1.4;transition:all .2s;cursor:default}
+.org-box:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.15)}
+.org-box.root{background:var(--fac);color:#fff;font-size:10px;min-width:200px;
+  border-bottom:3px solid var(--gold)}
+.org-box.l1{background:var(--fac2);color:#fff}
+.org-box.l2{background:var(--fac3);color:#fff}
+.org-box.l3{background:var(--light);color:var(--fac);border:1px solid var(--fac3)}
+.org-box.shared-box{background:var(--gold);color:var(--navy);border:2px solid var(--gold)}
+.org-box.service-box{background:var(--steel);color:#fff}
+.org-box.research-box{background:var(--navy2);color:#fff}
+.org-box.outdoor-box{background:#3A7A4A;color:#fff}
+
+/* Conectores */
+.org-line-down{width:2px;height:20px;background:var(--fac3);margin:0 auto}
+.org-line-h{height:2px;background:var(--fac3);flex:1;align-self:flex-start;margin-top:16px}
+.org-connector{display:flex;align-items:flex-start;gap:0;position:relative}
+.org-connector-wrap{display:flex;flex-direction:column;align-items:center;gap:0}
+
+/* Flex connector row */
+.org-flex-row{display:flex;gap:16px;justify-content:center;align-items:flex-start;flex-wrap:wrap;
+  padding-top:0;position:relative}
+.org-flex-row::before{content:'';position:absolute;top:0;left:10%;right:10%;
+  height:2px;background:var(--fac3)}
+.org-flex-item{display:flex;flex-direction:column;align-items:center}
+.org-vline{width:2px;height:16px;background:var(--fac3);margin:0 auto}
+
+/* ═══ LEYENDA ═══ */
+.leyenda{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;font-size:9px;
+  padding:10px 14px;background:var(--light);border-radius:2px}
+.ley-item{display:flex;align-items:center;gap:5px}
+.ley-dot{width:14px;height:10px;border-radius:2px}
+
+/* ═══ SUMMARY FINAL ═══ */
+.summary-box{background:var(--fac);color:#fff;padding:24px 28px;margin-top:32px}
+.summary-title{font-size:10px;font-weight:700;color:var(--gold);letter-spacing:2px;margin-bottom:16px}
+.summary-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+.sg-item{text-align:center;padding:12px 8px;background:rgba(255,255,255,.08);border-radius:4px}
+.sg-v{font-size:22px;font-weight:800;color:var(--gold);font-family:Georgia,serif}
+.sg-l{font-size:9px;color:rgba(255,255,255,.7);margin-top:4px;line-height:1.4}
+
+/* ═══ CARRERAS CARDS ═══ */
+.carrera-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}
+.carrera-card{background:#fff;border:1px solid var(--border);border-left:4px solid var(--fac);
+  padding:14px 16px;transition:all .2s}
+.carrera-card:hover{border-left-color:var(--gold);box-shadow:0 3px 10px rgba(0,0,0,.08)}
+.cc-icon{font-size:24px;margin-bottom:6px}
+.cc-name{font-size:11px;font-weight:700;color:var(--fac);margin-bottom:4px}
+.cc-est{font-size:9px;color:var(--steel)}
+.cc-areas{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.cc-area{font-size:8px;background:var(--light);color:var(--navy);padding:2px 7px;
+  border-radius:20px;font-weight:600}
+
+/* ═══ PARAMETER BOX ═══ */
+.param-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.param{background:#fff;border:1px solid var(--border);padding:12px 14px;
+  border-top:2px solid var(--fac);text-align:center}
+.param-v{font-size:18px;font-weight:800;color:var(--fac);font-family:Georgia,serif}
+.param-l{font-size:9px;color:var(--text);font-weight:600;margin-top:3px}
+.param-s{font-size:8px;color:var(--steel);margin-top:2px}
+
+/* ═══ NOTA COMPARTIDA ═══ */
+.nota-shared{background:#FFF9E6;border:1px solid var(--gold);border-left:4px solid var(--gold);
+  padding:12px 16px;margin-bottom:14px;font-size:10px;line-height:1.7;color:var(--text)}
+.nota-shared strong{color:var(--fac)}
+
+/* ═══ FOOTER ═══ */
+.ftr{background:#EEF2F6;border-top:2px solid var(--fac);padding:14px 48px;
+  font-size:9px;color:#5A6E82}
+.ftr-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px 32px;line-height:1.8}
+
+/* ═══ PRINT ═══ */
+@media print{
+  .nav,.cover{page-break-after:always}
+  .section{page-break-inside:avoid}
+  .prog-table tbody tr:nth-child(even){background:#F8FCF9!important}
+}
+@media(max-width:900px){
+  .cnt,.cover,.ftr{padding:16px 20px}
+  .g2,.g3,.g4,.param-grid,.carrera-cards,.summary-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ PORTADA ══ -->
+<div class="cover" id="top">
+  <div class="cover-num">F1</div>
+  <div class="cover-super">Programa Arquitectónico — Campus Técnico Interprovincial Zona 6</div>
+  <div class="cover-title">Facultad de Ecología, Geología<br>y Recursos Naturales</div>
+  <div class="cover-sub">PROGRAMA ARQUITECTÓNICO DETALLADO · ORGANIGRAMA FUNCIONAL · JUSTIFICACIÓN</div>
+  <div class="cover-chips">
+    <span class="chip gold">6 CARRERAS</span>
+    <span class="chip">~1.800 ESTUDIANTES</span>
+    <span class="chip">FASE MADURA</span>
+    <span class="chip">ZONA 6 — AZUAY · CAÑAR · MORONA SANTIAGO</span>
+    <span class="chip">PROYECTOS VI — 2025</span>
+  </div>
+  <div class="cover-meta">
+    <div class="cm"><div class="cm-v">6</div><div class="cm-l">Carreras tecnológicas</div></div>
+    <div class="cm"><div class="cm-v">~1.800</div><div class="cm-l">Estudiantes activos</div></div>
+    <div class="cm"><div class="cm-v">17.640</div><div class="cm-l">m² construidos</div></div>
+    <div class="cm"><div class="cm-v">9,8</div><div class="cm-l">m²/estudiante</div></div>
+    <div class="cm"><div class="cm-v">5.200</div><div class="cm-l">m² áreas exteriores</div></div>
+  </div>
+</div>
+
+<!-- ══ NAVEGACIÓN ══ -->
+<div class="nav">
+  <a href="#intro">🌿 Introducción</a>
+  <a href="#parametros">📐 Parámetros</a>
+  <a href="#carreras">🎓 Carreras</a>
+  <a href="#z1">Z1 Académica</a>
+  <a href="#z2">Z2 Laboratorios</a>
+  <a href="#z3">Z3 Talleres</a>
+  <a href="#z4">Z4 Exterior</a>
+  <a href="#z5">Z5 Admin.</a>
+  <a href="#z6">Z6 Investigación</a>
+  <a href="#z7">Z7 Servicios</a>
+  <a href="#organo">🔗 Organigrama</a>
+  <a href="#resumen">📊 Resumen</a>
+</div>
+
+<div class="cnt">
+
+<!-- ══ INTRODUCCIÓN ══ -->
+<div class="section" id="intro">
+  <div class="sec-header">
+    <div class="sec-num">01</div>
+    <div>
+      <div class="sec-title">Introducción y Contexto</div>
+      <div class="sec-sub">Justificación académica y territorial de la facultad</div>
+    </div>
+  </div>
+
+  <div class="justif">
+    <div class="justif-t">JUSTIFICACIÓN GENERAL DE LA FACULTAD</div>
+    <p>
+      La <strong>Facultad de Ecología, Geología y Recursos Naturales</strong> responde a la brecha crítica
+      de formación técnica en sectores productivos y ambientales de la Zona 6. Morona Santiago posee la mayor riqueza
+      de recursos naturales del territorio (bosques amazónicos, recursos hídricos, biodiversidad) y simultáneamente
+      la menor cobertura de educación superior técnica en gestión ambiental y producción agropecuaria de todo el Ecuador.
+      Cañar presenta alta actividad agrícola y ganadera con escasa formación técnica local. Azuay lidera la demanda
+      de gestión ambiental vinculada al desarrollo urbano e industrial de Cuenca.
+    </p>
+    <p style="margin-top:8px">
+      El WEF Future of Jobs 2025 proyecta <strong>+34 millones de empleos agropecuarios</strong> globales al 2030
+      por la transición verde. La Secretaría Nacional de Planificación (2021) identificó en las Mesas de Participación
+      Zona 6 la urgencia de fortalecer la formación técnica en estos sectores. El Acuerdo SENESCYT-2023-0033-AC
+      declara de interés público las carreras de producción agrícola-ganadera y tecnologías de protección ambiental,
+      que son la columna vertebral de esta facultad.
+    </p>
+    <p style="margin-top:8px">
+      <strong>Fuentes:</strong> WEF FoJ 2025 (weforum.org); Secretaría Nacional de Planificación — Mesas de Participación Zona 6, 2021
+      (planificacion.gob.ec); SENESCYT — Acuerdo Nro. SENESCYT-2023-0033-AC (educacionsuperior.gob.ec);
+      SENESCYT — Datos oferta académica Zona 6, 2022 (admision.senescyt.gob.ec); INEC — Proyecciones 2022–2030.
+    </p>
+  </div>
+
+  <div class="nota-shared">
+    <strong>🔶 NOTA SOBRE ÁREAS COMPARTIDAS (3 FACULTADES):</strong>
+    Las zonas marcadas con <span class="badge b-share">COMPARTIDA</span> están concebidas como infraestructura
+    común para las tres facultades del campus (Ecología / Mercadotecnia / Ingeniería e Informática).
+    Su costo, superficie y capacidad se distribuyen en el resumen global del campus y <strong>no se suman
+    individualmente en cada facultad</strong>, evitando triplicar la infraestructura de bienestar, auditorio,
+    comedor, biblioteca general y áreas deportivas. Los m² indicados son la porción asignada a esta facultad.
+  </div>
+</div>
+
+<!-- ══ PARÁMETROS ══ -->
+<div class="section" id="parametros">
+  <div class="sec-header">
+    <div class="sec-num">02</div>
+    <div>
+      <div class="sec-title">Parámetros de Diseño</div>
+      <div class="sec-sub">Bases cuantitativas del programa</div>
+    </div>
+  </div>
+
+  <div class="param-grid">
+    <div class="param">
+      <div class="param-v">1.800</div>
+      <div class="param-l">Estudiantes activos (fase madura)</div>
+      <div class="param-s">6 carreras × 300 est. cada una · 5 semestres activos simultáneos</div>
+    </div>
+    <div class="param">
+      <div class="param-v">1,8 m²</div>
+      <div class="param-l">Por estudiante — aula teórica</div>
+      <div class="param-s">MINEDU Perú RVM N° 140-2021 · MinEduc Ecuador UEM BID-2017</div>
+    </div>
+    <div class="param">
+      <div class="param-v">3,5 m²</div>
+      <div class="param-l">Por estudiante — laboratorio</div>
+      <div class="param-s">MINEDU Perú 2021 · Neufert 2013 (16ª ed.) · SENESCYT PRETT 2021</div>
+    </div>
+    <div class="param">
+      <div class="param-v">5,5 m²</div>
+      <div class="param-l">Por estudiante — taller / campo</div>
+      <div class="param-s">Neufert 2013 · MinEduc Ecuador UEM · MINEDU Perú 2021</div>
+    </div>
+    <div class="param">
+      <div class="param-v">40 est.</div>
+      <div class="param-l">Por aula teórica estándar</div>
+      <div class="param-s">CES Ecuador — Reglamento Régimen Académico 2022</div>
+    </div>
+    <div class="param">
+      <div class="param-v">20 est.</div>
+      <div class="param-l">Por laboratorio (grupal)</div>
+      <div class="param-s">MINEDU Perú 2021 · SENESCYT estándar institutos 2021</div>
+    </div>
+    <div class="param">
+      <div class="param-v">9,8 m²</div>
+      <div class="param-l">m² construidos / estudiante</div>
+      <div class="param-s">Entre ref. FEUP (9 m²) y norma LATAM (14 m²) · objetivo campus</div>
+    </div>
+    <div class="param">
+      <div class="param-v">30%</div>
+      <div class="param-l">Factor de circulación y estructura</div>
+      <div class="param-s">Sobre área neta programada · estándar arquitectónico regional</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Base de cálculo — distribución de estudiantes por carrera</div>
+    <div style="overflow-x:auto">
+    <table class="prog-table">
+      <thead><tr>
+        <th>Carrera</th><th class="td-c">Duración</th><th class="td-c">Cupos/cohorte</th>
+        <th class="td-c">Semestres activos</th><th class="td-c">Est. activos totales</th>
+        <th class="td-c">Est. simultáneos (50%)</th><th class="td-c">Jornada predominante</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="td-n">Tecnología en Gestión Ambiental</td><td class="td-c">5 semestres</td>
+          <td class="td-c">60</td><td class="td-c">5</td><td class="td-c">300</td>
+          <td class="td-c">150</td><td class="td-c">Diurna</td></tr>
+        <tr><td class="td-n">Tecnología en Manejo de Recursos Naturales</td><td class="td-c">5 semestres</td>
+          <td class="td-c">60</td><td class="td-c">5</td><td class="td-c">300</td>
+          <td class="td-c">150</td><td class="td-c">Diurna</td></tr>
+        <tr><td class="td-n">Tecnología en Producción Agropecuaria</td><td class="td-c">5 semestres</td>
+          <td class="td-c">60</td><td class="td-c">5</td><td class="td-c">300</td>
+          <td class="td-c">150</td><td class="td-c">Diurna</td></tr>
+        <tr><td class="td-n">Tecnología en Forestación</td><td class="td-c">5 semestres</td>
+          <td class="td-c">60</td><td class="td-c">5</td><td class="td-c">300</td>
+          <td class="td-c">150</td><td class="td-c">Diurna</td></tr>
+        <tr><td class="td-n">Tecnología en Agua y Saneamiento</td><td class="td-c">5 semestres</td>
+          <td class="td-c">60</td><td class="td-c">5</td><td class="td-c">300</td>
+          <td class="td-c">150</td><td class="td-c">Diurna</td></tr>
+        <tr><td class="td-n">Tecnología en Conservación Ambiental</td><td class="td-c">5 semestres</td>
+          <td class="td-c">60</td><td class="td-c">5</td><td class="td-c">300</td>
+          <td class="td-c">150</td><td class="td-c">Diurna</td></tr>
+        <tr class="tot-row"><td class="td-bold">TOTAL FACULTAD</td><td class="td-c">—</td>
+          <td class="td-c td-bold">360 cupos/cohorte</td><td class="td-c">—</td>
+          <td class="td-c td-bold">1.800 estudiantes</td>
+          <td class="td-c td-bold">900 simultáneos</td><td class="td-c">—</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="src"><strong>Fuente:</strong> CES Ecuador — Reglamento de Régimen Académico 2022 (período de 16 semanas, 5 períodos para nivel tecnológico); SENESCYT PRETT 2021 (cupos 40–80/carrera institutos); Tec. Azuay 2024 (referente regional)</p>
+  </div>
+</div>
+
+<!-- ══ CARRERAS ══ -->
+<div class="section" id="carreras">
+  <div class="sec-header">
+    <div class="sec-num">03</div>
+    <div>
+      <div class="sec-title">Perfil de las Carreras</div>
+      <div class="sec-sub">Enfoque, campo laboral y requerimientos espaciales específicos</div>
+    </div>
+  </div>
+
+  <div class="carrera-cards">
+    <div class="carrera-card">
+      <div class="cc-icon">🌿</div>
+      <div class="cc-name">Tecnología en Gestión Ambiental</div>
+      <div class="cc-est">300 estudiantes · 5 semestres · Diurna</div>
+      <p style="font-size:10px;color:var(--text);margin-top:6px;line-height:1.65">
+        Forma técnicos capaces de gestionar impactos ambientales, realizar estudios de impacto,
+        monitorear calidad ambiental y apoyar procesos de licenciamiento. Sector: empresas privadas,
+        GADs, consultoras ambientales, Ministerio del Ambiente y Agua (MAATE).
+      </p>
+      <div class="cc-areas">
+        <span class="cc-area">Lab. Análisis Ambiental</span>
+        <span class="cc-area">Lab. SIG</span>
+        <span class="cc-area">Trabajo de campo</span>
+      </div>
+    </div>
+    <div class="carrera-card">
+      <div class="cc-icon">🦋</div>
+      <div class="cc-name">Tecnología en Manejo de Recursos Naturales</div>
+      <div class="cc-est">300 estudiantes · 5 semestres · Diurna</div>
+      <p style="font-size:10px;color:var(--text);margin-top:6px;line-height:1.65">
+        Técnicos en inventario, evaluación y manejo sostenible de ecosistemas y biodiversidad.
+        Sector: Ministerio del Ambiente, reservas naturales, áreas protegidas (Zona 6 posee
+        importantes reservas: Sangay, Podocarpus, Kutukú).
+      </p>
+      <div class="cc-areas">
+        <span class="cc-area">Lab. Biología</span>
+        <span class="cc-area">Lab. SIG/Teledetección</span>
+        <span class="cc-area">Campo / Excursiones</span>
+      </div>
+    </div>
+    <div class="carrera-card">
+      <div class="cc-icon">🌾</div>
+      <div class="cc-name">Tecnología en Producción Agropecuaria</div>
+      <div class="cc-est">300 estudiantes · 5 semestres · Diurna</div>
+      <p style="font-size:10px;color:var(--text);margin-top:6px;line-height:1.65">
+        Técnicos en gestión de cultivos, sanidad animal y vegetal, manejo de suelos
+        y agronegocios. Demanda: Morona Santiago (ganadería, cultivos amazónicos),
+        Cañar (floricultura, papa, maíz). Carrera con 0 cupos llenados en el país en 2023 pese a alta demanda laboral.
+      </p>
+      <div class="cc-areas">
+        <span class="cc-area">Parcelas experimentales</span>
+        <span class="cc-area">Lab. Suelos</span>
+        <span class="cc-area">Estabulación animal</span>
+      </div>
+    </div>
+    <div class="carrera-card">
+      <div class="cc-icon">🌲</div>
+      <div class="cc-name">Tecnología en Forestación</div>
+      <div class="cc-est">300 estudiantes · 5 semestres · Diurna</div>
+      <p style="font-size:10px;color:var(--text);margin-top:6px;line-height:1.65">
+        Técnicos en producción de plantas, reforestación, manejo de bosques, silvicultura
+        y aprovechamiento forestal sostenible. Alta pertinencia en Morona Santiago
+        (Amazonia ecuatoriana) y cuencas hidrográficas de Azuay.
+      </p>
+      <div class="cc-areas">
+        <span class="cc-area">Vivero forestal</span>
+        <span class="cc-area">Lab. Dendrología</span>
+        <span class="cc-area">Taller de madera</span>
+      </div>
+    </div>
+    <div class="carrera-card">
+      <div class="cc-icon">💧</div>
+      <div class="cc-name">Tecnología en Agua y Saneamiento</div>
+      <div class="cc-est">300 estudiantes · 5 semestres · Diurna</div>
+      <p style="font-size:10px;color:var(--text);margin-top:6px;line-height:1.65">
+        Técnicos en gestión de sistemas de agua potable, tratamiento de aguas residuales
+        y saneamiento ambiental. Sector: GADs municipales, ETAPA EP Cuenca,
+        operadoras de agua en Morona y Cañar, proyectos de cooperación.
+      </p>
+      <div class="cc-areas">
+        <span class="cc-area">Lab. Calidad Agua</span>
+        <span class="cc-area">Lab. Hidráulica</span>
+        <span class="cc-area">Planta piloto</span>
+      </div>
+    </div>
+    <div class="carrera-card">
+      <div class="cc-icon">🏔️</div>
+      <div class="cc-name">Tecnología en Conservación Ambiental</div>
+      <div class="cc-est">300 estudiantes · 5 semestres · Diurna</div>
+      <p style="font-size:10px;color:var(--text);margin-top:6px;line-height:1.65">
+        Técnicos en restauración de ecosistemas degradados, educación ambiental,
+        cambio climático y economía circular. Sector: ONGs, MAATE, proyectos
+        internacionales de conservación (GEF, UNDP, WWF con presencia en Zona 6).
+      </p>
+      <div class="cc-areas">
+        <span class="cc-area">Lab. Ecología</span>
+        <span class="cc-area">Lab. SIG</span>
+        <span class="cc-area">Jardín botánico</span>
+      </div>
+    </div>
+  </div>
+  <p class="src"><strong>Fuente perfil laboral:</strong> MAATE Ecuador — Planes de Manejo de Áreas Protegidas Zona 6 (2022); SENESCYT PRETT 2021; Primicias ago. 2023 (carrera Producción Agropecuaria con 0 cupos llenados); WEF FoJ 2025; ETAPA EP Cuenca — demanda técnicos agua (2023)</p>
+</div>
+
+<!-- ══ ZONA 1: ACADÉMICA ══ -->
+<div class="section" id="z1">
+  <div class="sec-header">
+    <div class="sec-num">Z1</div>
+    <div>
+      <div class="sec-title">Zona Académica — Aulas Teóricas</div>
+      <div class="sec-sub">Espacios de enseñanza formal · 1,8 m²/estudiante</div>
+    </div>
+  </div>
+
+  <div class="justif">
+    <div class="justif-t">JUSTIFICACIÓN ZONA 1</div>
+    <p>Las aulas teóricas son el espacio básico de transmisión de conocimiento. Para una carrera tecnológica
+    (CES: mínimo 40% horas teóricas), se calcula que el 50% de los 900 estudiantes simultáneos requieren aula
+    en cualquier momento de la jornada diurna. El estándar de 1,8 m²/estudiante (MINEDU Perú RVM 140-2021,
+    aceptado también por MinEduc Ecuador para educación superior) para un módulo de 40 estudiantes implica
+    aulas de 72 m² netos. Se prevén dos tipos: aulas estándar (40 est. / 72 m²) y aulas de seminario
+    (25 est. / 50 m²) para clases de integración, trabajo grupal y capacitaciones.</p>
+    <p style="margin-top:6px"><strong>Cálculo:</strong> 900 est. simultáneos × 50% en aula teórica = 450 est.
+    ÷ 40 est./aula = 11,25 → <strong>12 aulas estándar</strong> + 6 aulas de seminario para talleres grupales.</p>
+    <p style="margin-top:6px"><strong>Fuente:</strong> MINEDU Perú RVM N° 140-2021 — Criterios de Diseño para Institutos de Educación Superior Tecnológica (gob.pe/minedu); MinEduc Ecuador UEM BID-2017; Neufert E. (2013) 16ª ed. p. 245–260.</p>
+  </div>
+
+  <div class="prog-table-wrap">
+    <table class="prog-table">
+      <thead><tr>
+        <th>N°</th><th>Ambiente</th><th>Descripción / Equipamiento mínimo</th>
+        <th class="td-c">Capacidad<br>(est.)</th><th class="td-c">Cant.</th>
+        <th class="td-c">m² neto<br>c/u</th><th class="td-c">m² neto<br>total</th>
+        <th>Carreras que usan</th><th>Compartida</th>
+      </tr></thead>
+      <tbody>
+        <tr class="zone-row"><td colspan="9">ZONA 1 — ZONA ACADÉMICA (AULAS TEÓRICAS)</td></tr>
+
+        <!-- Aulas tipo A -->
+        <tr class="sz-row"><td colspan="9">1.1 — AULAS TIPO A (Teóricas estándar)</td></tr>
+        <tr>
+          <td>1.1.1</td><td class="td-n">Aula teórica tipo A-40</td>
+          <td>Escritorios universitarios con tableta, pizarrón blanco acrílico (2,40×1,20 m), proyector multimedia HD, pantalla de proyección motorizada, sistema de audio, 2 puertas de emergencia, iluminación LED, ventilación natural + extractor, toma de corriente por puesto</td>
+          <td class="td-c">40</td><td class="td-c">12</td>
+          <td class="td-c">72</td><td class="td-c td-bold">864</td>
+          <td>Todas las carreras</td><td></td>
+        </tr>
+        <tr>
+          <td>1.1.2</td><td class="td-n">Aula tipo A — bodega de materiales</td>
+          <td>Armarios metálicos para material didáctico, cajonera para docente, estante de libros de consulta por área, pizarrón de corcho para anuncios</td>
+          <td class="td-c">—</td><td class="td-c">12</td>
+          <td class="td-c">6</td><td class="td-c td-bold">72</td>
+          <td>Todas las carreras</td><td></td>
+        </tr>
+
+        <!-- Aulas tipo B -->
+        <tr class="sz-row"><td colspan="9">1.2 — AULAS TIPO B (Seminario / Tutoría grupal)</td></tr>
+        <tr>
+          <td>1.2.1</td><td class="td-n">Aula seminario tipo B-25</td>
+          <td>Mesas modulares agrupables, sillas universitarias, pizarrón doble cara, proyector portátil, pantalla, conectividad Wi-Fi de alta densidad, iluminación focal, permite configuración en herradura o grupos</td>
+          <td class="td-c">25</td><td class="td-c">6</td>
+          <td class="td-c">50</td><td class="td-c td-bold">300</td>
+          <td>Todas las carreras</td><td></td>
+        </tr>
+        <tr>
+          <td>1.2.2</td><td class="td-n">Aula de maquetas / trabajo integrador</td>
+          <td>Mesas de trabajo amplias tipo tablero (1,20×0,80 m), toma corriente cada 1,5 m, lavabo integrado, armarios de almacenamiento, iluminación cenital de alta potencia, extractores de olor/polvo</td>
+          <td class="td-c">20</td><td class="td-c">2</td>
+          <td class="td-c">60</td><td class="td-c td-bold">120</td>
+          <td>Gest. Ambiental / Forestación / Conservación</td><td></td>
+        </tr>
+
+        <!-- Aulas TIC -->
+        <tr class="sz-row"><td colspan="9">1.3 — AULAS TIC INTEGRADAS (Teoría + Computadores)</td></tr>
+        <tr>
+          <td>1.3.1</td><td class="td-n">Aula TIC-ambiental (25 puestos)</td>
+          <td>25 computadores de escritorio (min. i7 16GB RAM, pantalla 24"), software especializado: ArcGIS, QGIS, AutoCAD, ENVI, Google Earth Engine (licencias institucionales), cableado estructurado Cat 6A, doble pantalla de proyección, impresora de gran formato (plotter A0), escáner de documentos</td>
+          <td class="td-c">25</td><td class="td-c">3</td>
+          <td class="td-c">72</td><td class="td-c td-bold">216</td>
+          <td>Gestión Ambiental / Manejo RRNN / Conservación</td><td></td>
+        </tr>
+        <tr>
+          <td>1.3.2</td><td class="td-n">Aula TIC-producción (25 puestos)</td>
+          <td>25 computadores de escritorio, software: sistemas de información agropecuaria, planillas de manejo de producción, contabilidad agropecuaria, diseño de parcelas y fincas, sistema de gestión hídrica (SWAT, HEC-HMS), plotter</td>
+          <td class="td-c">25</td><td class="td-c">2</td>
+          <td class="td-c">72</td><td class="td-c td-bold">144</td>
+          <td>Producción Agropecuaria / Agua y Saneamiento / Forestación</td><td></td>
+        </tr>
+
+        <!-- Circulación z1 -->
+        <tr class="sz-row"><td colspan="9">1.4 — CIRCULACIÓN Y SERVICIOS DE ZONA ACADÉMICA</td></tr>
+        <tr>
+          <td>1.4.1</td><td class="td-n">Corredor principal de aulas (doble cargado)</td>
+          <td>Ancho mínimo 2,40 m, iluminación natural cenital, cartelera informativa por carrera, señalética de evacuación, extintores, puertas de emergencia cada 25 m</td>
+          <td class="td-c">—</td><td class="td-c">1</td>
+          <td class="td-c">180</td><td class="td-c td-bold">180</td>
+          <td>Todos</td><td></td>
+        </tr>
+        <tr>
+          <td>1.4.2</td><td class="td-n">Hall de distribución por planta</td>
+          <td>Área de espera entre clases, tablero de comunicaciones, plano de evacuación, acceso a escaleras/ascensor, sistema de cartelería digital</td>
+          <td class="td-c">—</td><td class="td-c">4</td>
+          <td class="td-c">40</td><td class="td-c td-bold">160</td>
+          <td>Todos</td><td></td>
+        </tr>
+
+        <!-- Subtotal Z1 -->
+        <tr class="st-row">
+          <td colspan="6" class="td-bold">SUBTOTAL ZONA 1 — Área Neta</td>
+          <td class="td-c td-bold">2.056 m²</td><td colspan="2"></td>
+        </tr>
+        <tr class="st-row" style="background:#D4EDDA!important">
+          <td colspan="6" class="td-bold">SUBTOTAL ZONA 1 — Área Bruta (+30% circulación/estructura)</td>
+          <td class="td-c td-bold">2.673 m²</td><td colspan="2"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="src"><strong>Fuente:</strong> MINEDU Perú RVM N° 140-2021 (art. 6.1 — ambientes teóricos: 1,6–2,0 m²/est.); MinEduc Ecuador UEM BID-2017 (aula 72 m² para 40 est.); Neufert E. (2013) Arte de proyectar, 16ª ed. Gustavo Gili, p. 245–262; CES Ecuador — Reg. Régimen Académico 2022</p>
+
+  <!-- Organigrama Z1 -->
+  <div class="organo-wrap">
+    <div class="org-title">Organigrama funcional — Zona Académica (Z1)</div>
+    <div class="org-tree">
+      <div class="org-level">
+        <div class="org-node">
+          <div class="org-box root">ZONA ACADÉMICA (Z1)<br><small style="font-weight:400;font-size:8px">2.673 m² brutos</small></div>
+        </div>
+      </div>
+      <div class="org-line-down"></div>
+      <div class="org-flex-row">
+        <div class="org-flex-item">
+          <div class="org-vline"></div>
+          <div class="org-box l1">Bloque Aulas Tipo A<br><small style="font-weight:400">12 × 72 m² + bod.</small></div>
+        </div>
+        <div class="org-flex-item">
+          <div class="org-vline"></div>
+          <div class="org-box l1">Bloque Aulas Tipo B<br><small style="font-weight:400">6 × 50 m² + maquetas</small></div>
+        </div>
+        <div class="org-flex-item">
+          <div class="org-vline"></div>
+          <div class="org-box l1">Aulas TIC Ambiental<br><small style="font-weight:400">3 × 72 m² (25 pc c/u)</small></div>
+        </div>
+        <div class="org-flex-item">
+          <div class="org-vline"></div>
+          <div class="org-box l1">Aulas TIC Producción<br><small style="font-weight:400">2 × 72 m² (25 pc c/u)</small></div>
+        </div>
+        <div class="org-flex-item">
+          <div class="org-vline"></div>
+          <div class="org-box service-box">Circulaciones<br>y halls (340 m²)</div>
+        </div>
+      </div>
+    </div>
+    <div class="leyenda">
+      <div class="ley-item"><div class="ley-dot" style="background:var(--fac)"></div><span>Nodo raíz de zona</span></div>
+      <div class="ley-item"><div class="ley-dot" style="background:var(--fac2)"></div><span>Subzona principal</span></div>
+      <div class="ley-item"><div class="ley-dot" style="background:var(--steel)"></div><span>Servicios/circulación</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ZONA 2: LABORATORIOS ══ -->
+<div class="section" id="z2">
+  <div class="sec-header">
+    <div class="sec-num">Z2</div>
+    <div>
+      <div class="sec-title">Zona de Laboratorios Especializados</div>
+      <div class="sec-sub">Enseñanza práctica científica · 3,5 m²/estudiante</div>
+    </div>
+  </div>
+
+  <div class="justif">
+    <div class="justif-t">JUSTIFICACIÓN ZONA 2</div>
+    <p>Los laboratorios constituyen el núcleo diferenciador de la formación técnica-tecnológica.
+    El CES (Reglamento de Régimen Académico 2022) establece que los programas tecnológicos deben
+    destinar un mínimo del 40–60% de horas a formación práctica. Los laboratorios se diseñan con
+    capacidad de 20 estudiantes (estándar MINEDU Perú / SENESCYT PRETT 2021) para garantizar
+    supervisión segura con equipos especializados, a razón de 3,5 m²/estudiante neto.
+    Se identifican tres categorías: (a) laboratorios compartidos entre varias carreras de la facultad,
+    (b) laboratorios específicos por carrera, y (c) laboratorios de uso interprovincial (compartidos entre las 3 facultades del campus cuando aplica).</p>
+    <p style="margin-top:6px"><strong>Fuente:</strong> CES Ecuador — Reglamento Régimen Académico 2022 (ces.gob.ec); MINEDU Perú RVM N° 140-2021 (art. 6.2 — laboratorios: 2,0–5,0 m²/est.); SENESCYT PRETT 2021 (estándar laboratorios institutos, p. 45); Neufert E. (2013) 16ª ed. p. 266–278.</p>
+  </div>
+
+  <div class="prog-table-wrap">
+    <table class="prog-table">
+      <thead><tr>
+        <th>N°</th><th>Ambiente / Laboratorio</th><th>Descripción y equipamiento</th>
+        <th class="td-c">Cap.<br>(est.)</th><th class="td-c">Cant.</th>
+        <th class="td-c">m² neto<br>c/u</th><th class="td-c">m² neto<br>total</th>
+        <th>Carreras</th><th>Tipo</th>
+      </tr></thead>
+      <tbody>
+        <tr class="zone-row"><td colspan="9">ZONA 2 — LABORATORIOS ESPECIALIZADOS</td></tr>
+
+        <!-- Laboratorios compartidos de la facultad -->
+        <tr class="sz-row"><td colspan="9">2.1 — LABORATORIOS COMUNES A LA FACULTAD (usan 3+ carreras)</td></tr>
+        <tr>
+          <td>2.1.1</td><td class="td-n">Laboratorio de Análisis Ambiental y de Suelos</td>
+          <td>Mesones de acero inoxidable con toma de agua/desagüe, campana de extracción de gases, espectrofotómetro UV/Vis, pH-metro digital, conductímetro, turbidímetro, centrifugadora, balanzas analíticas, agitadores magnéticos, estufas, baño maría, equipo Kjeldahl (nitrógeno), digestor de microondas, kit de análisis de suelos FAO, armario de reactivos con ventilación, ducha de emergencia + lavaojos</td>
+          <td class="td-c">20</td><td class="td-c">2</td>
+          <td class="td-c">80</td><td class="td-c td-bold">160</td>
+          <td>Gestión Amb. / Producción Agropec. / Agua y San. / Conserv.</td>
+          <td><span class="badge b-fac">COMPARTIDA FACULTAD</span></td>
+        </tr>
+        <tr>
+          <td>2.1.2</td><td class="td-n">Laboratorio de Química Ambiental</td>
+          <td>Mesones centrales y perimetrales, campana de extracción (2 ud.), cromatógrafo de gases (GC) básico, espectrómetro de absorción atómica, DBO-metro, DQO-reactor, equipo para determinación de metales pesados, kit de identificación de contaminantes orgánicos, cámara de frío (+4°C) para muestras, equipo de protección personal completo por puesto</td>
+          <td class="td-c">20</td><td class="td-c">2</td>
+          <td class="td-c">80</td><td class="td-c td-bold">160</td>
+          <td>Gestión Amb. / Agua y Saneam. / Conservación</td>
+          <td><span class="badge b-fac">COMPARTIDA FACULTAD</span></td>
+        </tr>
+        <tr>
+          <td>2.1.3</td><td class="td-n">Laboratorio de Microbiología Ambiental</td>
+          <td>Cabina de bioseguridad nivel 2, autoclave, incubadoras (20°C y 37°C), microscopios binoculares (20 ud.), microscopio estereoscópico (4 ud.), equipo de siembra y cultivo, colección de referencia de microorganismos, refrigerador de laboratorio, centrifugadora refrigerada, lupa digital proyectable</td>
+          <td class="td-c">20</td><td class="td-c">1</td>
+          <td class="td-c">75</td><td class="td-c td-bold">75</td>
+          <td>Gestión Amb. / Agua y Saneam. / Manejo RRNN</td>
+          <td><span class="badge b-fac">COMPARTIDA FACULTAD</span></td>
+        </tr>
+        <tr>
+          <td>2.1.4</td><td class="td-n">Laboratorio de SIG y Teledetección Ambiental</td>
+          <td>25 estaciones de trabajo de alto rendimiento (i7/i9, 32GB RAM, GPU dedicada, pantalla 27"), software: ArcGIS Pro, QGIS, ENVI, Google Earth Engine, R Studio, Python (Anaconda), impresora de gran formato (plotter 60"), escáner de mapas, GPS diferencial (2 ud.), drone DJI con sensor multispectral (2 ud.), pantalla de presentación 86" 4K, área de trabajo de gabinete con mesas de análisis cartográfico</td>
+          <td class="td-c">25</td><td class="td-c">2</td>
+          <td class="td-c">75</td><td class="td-c td-bold">150</td>
+          <td>Gestión Amb. / Manejo RRNN / Forestación / Conservación</td>
+          <td><span class="badge b-fac">COMPARTIDA FACULTAD</span></td>
+        </tr>
+        <tr>
+          <td>2.1.5</td><td class="td-n">Bodega de equipos de campo y EPP</td>
+          <td>Armarios metálicos para equipos de campo (GPS portátil ×20, kits de muestreo ×20, brújulas ×20, clinómetros ×10, altímetros, equipo de medición forestal: hipsómetro, cinta diamétrica, forcípula), equipos de protección personal (cascos, botas, overoles, guantes), estación de carga y mantenimiento de drones, cargadores de baterías</td>
+          <td class="td-c">—</td><td class="td-c">1</td>
+          <td class="td-c">50</td><td class="td-c td-bold">50</td>
+          <td>Todas las carreras de campo</td>
+          <td><span class="badge b-fac">COMPARTIDA FACULTAD</span></td>
+        </tr>
+
+        <!-- Laboratorios específicos por carrera -->
+        <tr class="sz-row"><td colspan="9">2.2 — LABORATORIOS ESPECÍFICOS POR CARRERA</td></tr>
+        <tr>
+          <td>2.2.1</td><td class="td-n">Lab. de Calidad del Agua y Sistemas de Tratamiento</td>
+          <td>Equipo de análisis fisicoquímico completo (turbidímetro, conductímetro, pH, dureza, alcalinidad, cloruros, fluoruros, metales), kit de análisis bacteriológico (coliformes, E. coli), equipo de monitoreo continuo (multiparámetro portátil ×6), simulador de sistema de tratamiento (filtro lento, filtro rápido, sedimentador, cloración), banco hidráulico de laboratorio, manómetros y caudalímetros, mesa de trabajo en acero inoxidable</td>
+          <td class="td-c">20</td><td class="td-c">1</td>
+          <td class="td-c">80</td><td class="td-c td-bold">80</td>
+          <td>Agua y Saneamiento</td>
+          <td><span class="badge b-navy">ESPECÍFICA</span></td>
+        </tr>
+        <tr>
+          <td>2.2.2</td><td class="td-n">Lab. de Biología y Ecología (Colecciones)</td>
+          <td>Microscopios estereoscópicos (10 ud.), lupas binoculares (10 ud.), colección entomológica de referencia Zona 6 (herbario 500+ muestras), colección de suelos (perfiles), claves taxonómicas, atlas de flora y fauna amazónica, cámara de humedad controlada para conservación de muestras, muebles tipo museo para colecciones, área de preparación de muestras con lavabo y extractora</td>
+          <td class="td-c">20</td><td class="td-c">1</td>
+          <td class="td-c">75</td><td class="td-c td-bold">75</td>
+          <td>Manejo RRNN / Conservación Ambiental</td>
+          <td><span class="badge b-navy">ESPECÍFICA</span></td>
+        </tr>
+        <tr>
+          <td>2.2.3</td><td class="td-n">Lab. de Sanidad Vegetal y Fitopatología</td>
+          <td>Microscopios ópticos (20 ud.), lupa estereoscópica (5 ud.), equipo de diagnóstico fitosanitario (kit de identificación de plagas y enfermedades), cámara de inoculación, incubadora de cultivos vegetales, kit de análisis de semillas (germinación, vigor, pureza), medidor de humedad de suelo y follaje, dosificador de agroquímicos con equipo de seguridad, armario de insumos agrícolas (ventilado)</td>
+          <td class="td-c">20</td><td class="td-c">1</td>
+          <td class="td-c">75</td><td class="td-c td-bold">75</td>
+          <td>Producción Agropecuaria / Forestación</td>
+          <td><span class="badge b-navy">ESPECÍFICA</span></td>
+        </tr>
+        <tr>
+          <td>2.2.4</td><td class="td-n">Lab. de Dendrología, Xiloteca y Productos Forestales</td>
+          <td>Xiloteca de referencia regional (100+ muestras de maderas Zona 6 — maderas duras amazónicas, pino, eucalipto), lupas para identificación de maderas, densímetro xilológico, medidor de humedad de madera, colección de semillas forestales, equipo de extracción de resinas, atlas dendrológico amazónico, área de preparación de cortes histológicos (micrótomo de deslizamiento)</td>
+          <td class="td-c">20</td><td class="td-c">1</td>
+          <td class="td-c">60</td><td class="td-c td-bold">60</td>
+          <td>Forestación</td>
+          <td><span class="badge b-navy">ESPECÍFICA</span></td>
+        </tr>
+        <tr>
+          <td>2.2.5</td><td class="td-n">Lab. de Climatología y Estación Meteorológica</td>
+          <td>Estación meteorológica automática Davis (temperatura, HR, precipitación, velocidad/dirección del viento, radiación solar, presión), software de análisis climático (SPI, SPEI), pluviómetros portátiles (10 ud.), psicrómetros, manómetros digitales, dataloggers de temperatura y HR (20 ud.), equipo de calibración, computadores para análisis de series temporales climáticas</td>
+          <td class="td-c">20</td><td class="td-c">1</td>
+          <td class="td-c">50</td><td class="td-c td-bold">50</td>
+          <td>Gestión Amb. / Manejo RRNN / Agua y San. / Conservación</td>
+          <td><span class="badge b-fac">COMPARTIDA FACULTAD</span></td>
+        </tr>
+        <tr>
+          <td>2.2.6</td><td class="td-n">Cuarto de preparación y almacén de reactivos</td>
+          <td>Área de preparación de soluciones estándar, almacén de reactivos (con ventilación forzada, sistema FIFO, registro digital de inventario), ducha de emergencia, contenedores de residuos peligrosos (residuos de laboratorio) con protocolo de disposición, extinguidores tipo CO₂, botiquín de primeros auxilios</td>
+          <td class="td-c">—</td><td class="td-c">2</td>
+          <td class="td-c">30</td><td class="td-c td-bold">60</td>
+          <td>Todos los laboratorios</td>
+          <td><span class="badge b-fac">COMPARTIDA FACULTAD</span></td>
+        </tr>
+        <tr>
+          <td>2.2.7</td><td class="td-n">Cuarto frío / conservación de muestras</td>
+          <td>Cámara frigorífica (+4°C, 15 m²), freezer (-20°C para muestras biológicas), congelador de laboratorio (-80°C), estantes metálicos, registro de temperatura continuo, UPS para continuidad de energía, alarma de temperatura</td>
+          <td class="td-c">—</td><td class="td-c">1</td>
+          <td class="td-c">20</td><td class="td-c td-bold">20</td>
+          <td>Todos los laboratorios</td>
+          <td><span class="badge b-fac">COMPARTIDA FACULTAD</span></td>
+        </tr>
+        <tr>
+          <td>2.2.8</td><td class="td-n">SSHH de laboratorios (por género + discapacidad)</td>
+          <td>Ducha de emergencia adosada a laboratorios, lavabos de doble taza para lavado de manos antes/después, SSHH h/m separados (2 inodoros + 2 lavabos c/u), SSHH discapacidad universal, dispensador de jabón desinfectante, secador de manos, papelera con tapa de pedal</td>
+          <td class="td-c">—</td><td class="td-c">3</td>
+          <td class="td-c">22</td><td class="td-c td-bold">66</td>
+          <td>Todos</td>
+          <td></td>
+        </tr>
+
+        <!-- Subtotal Z2 -->
+        <tr class="st-row">
+          <td colspan="6" class="td-bold">SUBTOTAL ZONA 2 — Área Neta</td>
+          <td class="td-c td-bold">1.081 m²</td><td colspan="2"></td>
+        </tr>
+        <tr class="st-row" style="background:#D4EDDA!important">
+          <td colspan="6" class="td-bold">SUBTOTAL ZONA 2 — Área Bruta (+30%)</td>
+          <td class="td-c td-bold">1.405 m²</td><td colspan="2"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="src"><strong>Fuente:</strong> MINEDU Perú RVM N° 140-2021 (art. 6.2 — laboratorios especializados: 2,0–5,0 m²/est.); SENESCYT PRETT 2021 (estándares laboratorios institutos p. 45–60); Neufert E. (2013) 16ª ed. p. 266–278; FAO — Manual de análisis de suelos para técnicos agropecuarios (2012); ISO 17025 (laboratorios de análisis ambiental)</p>
+
+  <!-- Organigrama Z2 -->
+  <div class="organo-wrap">
+    <div class="org-title">Organigrama funcional — Zona de Laboratorios (Z2)</div>
+    <div class="org-tree">
+      <div class="org-level">
+        <div class="org-node">
+          <div class="org-box root">ZONA LABORATORIOS (Z2)<br><small style="font-weight:400;font-size:8px">1.405 m² brutos</small></div>
+        </div>
+      </div>
+      <div class="org-line-down"></div>
+      <div class="org-flex-row">
+        <div class="org-flex-item">
+          <div class="org-vline"></div>
+          <div class="org-box l1">Labs. Comunes<br>(5 ambientes)</div>
+          <div class="org-vline"></div>
+          <div class="org-flex-row" style="gap:8px;margin-top:0">
+            <div class="org-flex-item"><div class="org-vline"></div><div class="org-box l3" style="min-width:90px">Análisis<br>Suelos/Amb.</div></div>
+            <div class="org-flex-item"><div class="org-vline"></div><div class="org-box l3" style="min-width:90px">Química<br>Ambiental</div></div>
+            <div class="org-flex-item"><div class="org-vline"></div><div class="org-box l3" style="min-width:90px">Microbiología</div></div>
+            <div class="org-flex-item"><div class="org-vline"></div><div class="org-box l3" style="min-width:90px">SIG y<br>Teledetección</div></div>
+            <div class="org-flex-item"><div class="org-vline"></div><div class="org-box l3" style="min-width:90px">Climatología</div></div>
+          </div>
+        </div>
+        <div class="org-flex-item">
+          <div class="org-vline"></div>
+          <div class="org-box l1">Labs. Específicos<br>(5 ambientes)</div>
+          <div class="org-vline"></div>
+          <div class="org-flex-row" style="gap:8px;margin-top:0">
+            <div class="org-flex-item"><div class="org-vline"></div><div class="org-box l3" style="min-width:90px">Calidad<br>del Agua</div></div>
+            <div class="org-flex-item"><div class="org-vline"></div><div class="org-box l3" style="min-width:90px">Biología<br>Ecología</div></div>
+            <div class="org-flex-item"><div class="org-vline"></div><div class="org-box l3" style="min-width:90px">Sanidad<br>Vegetal</div></div>
+            <div class="org-flex-item"><div class="org-vline"></div><div class="org-box l3" style="min-width:90px">Xiloteca<br>Forestal</div></div>
+          </div>
+        </div>
+        <div class="org-flex-item">
+          <div class="org-vline"></div>
+          <div class="org-box service-box">Soporte<br>(cuarto frío, reactivos, SSHH)</div>
+        </div>
+      </div>
+    </div>
+    <div class="leyenda">
+      <div class="ley-item"><div class="ley-dot" style="background:var(--fac)"></div><span>Nodo raíz</span></div>
+      <div class="ley-item"><div class="ley-dot" style="background:var(--fac2)"></div><span>Subzona</span></div>
+      <div class="ley-item"><div class="ley-dot" style="background:var(--light);border:1px solid var(--fac3)"></div><span>Ambiente específico</span></div>
+      <div class="ley-item"><div class="ley-dot" style="background:var(--steel)"></div><span>Soporte técnico</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ZONA 3: TALLERES Y PRÁCTICAS ══ -->
+<div class="section" id="z3">
+  <div class="sec-header">
+    <div class="sec-num">Z3</div>
+    <div>
+      <div class="sec-title">Zona de Talleres y Prácticas</div>
+      <div class="sec-sub">Formación práctica aplicada · 5,5 m²/estudiante</div>
+    </div>
+  </div>
+
+  <div class="justif">
+    <div class="justif-t">JUSTIFICACIÓN ZONA 3</div>
+    <p>Los talleres prácticos son el espacio distintivo de la formación tecnológica frente a la formación universitaria convencional.
+    Para las carreras de ciencias ambientales y agropecuarias, la práctica requiere espacios con condiciones
+    especiales: acceso a agua, ventilación reforzada, iluminación natural, resistencia a humedad y suciedad,
+    puertas amplias para ingreso de equipos y materiales. El estándar de 5,5 m²/estudiante se aplica a estos
+    espacios (Neufert 2013 — talleres de ciencias aplicadas: 4,0–8,0 m²/est.; MINEDU Perú 2021 — talleres industriales: 4,0–6,0 m²/est.).
+    La capacidad por taller se limita a 15 estudiantes para garantizar supervisión segura.</p>
+    <p style="margin-top:6px"><strong>Fuente:</strong> Neufert E. (2013) 16ª ed. p. 280–295; MINEDU Perú RVM N° 140-2021 (art. 6.3 — talleres industriales: 4,0–6,0 m²/est.); FAO — Infraestructura para capacitación técnica agropecuaria, 2018; MinEduc Ecuador UEM BID-2017.</p>
+  </div>
+
+  <div class="prog-table-wrap">
+    <table class="prog-table">
+      <thead><tr>
+        <th>N°</th><th>Ambiente / Taller</th><th>Descripción y equipamiento</th>
+        <th class="td-c">Cap.</th><th class="td-c">Cant.</th>
+        <th class="td-c">m² neto<br>c/u</th><th class="td-c">m² neto<br>total</th>
+        <th>Carreras</th><th>Tipo</th>
+      </tr></thead>
+      <tbody>
+        <tr class="zone-row"><td colspan="9">ZONA 3 — TALLERES Y ESPACIOS DE PRÁCTICA APLICADA</td></tr>
+
+        <tr class="sz-row"><td colspan="9">3.1 — TALLERES CUBIERTOS INTERIORES</td></tr>
+        <tr>
+          <td>3.1.1</td><td class="td-n">Taller de Manejo de Equipos de Campo y Topografía</td>
+          <td>Armarios de almacenamiento de equipos topográficos (estación total, nivel óptico, GPS diferencial, drones), mesas de trabajo para calibración, área de carga de baterías, cámara de simulación de trabajo en campo (piso de tierra compactada), compás de campo, maqueta topográfica de la Zona 6 (escala 1:50.000), zona de práctica de lectura e interpretación de planos</td>
+          <td class="td-c">15</td><td class="td-c">1</td>
+          <td class="td-c">80</td><td class="td-c td-bold">80</td>
+          <td>Gestión Amb. / Manejo RRNN / Forestación</td>
+          <td><span class="badge b-fac">COMPARTIDA FACULTAD</span></td>
+        </tr>
+        <tr>
+          <td>3.1.2</td><td class="td-n">Taller de Maquinaria Agrícola Básica</td>
+          <td>Motocultivador (2 ud.), fumigadora de espalda manual/eléctrica (5 ud.), cortadora de maleza, sembradora manual tipo matraca, bombas de mochila, equipo de riego por goteo demostrativo, desmalezadora, herramientas menores (20 juegos), mesas de trabajo, piso de hormigón reforzado (resistente a grasas/aceites), ventilación industrial, foso de inspección, depósito de combustible (exterior), área de lavado de equipos con rejilla colectora de aceites</td>
+          <td class="td-c">15</td><td class="td-c">1</td>
+          <td class="td-c">120</td><td class="td-c td-bold">120</td>
+          <td>Producción Agropecuaria</td>
+          <td><span class="badge b-navy">ESPECÍFICA</span></td>
+        </tr>
+        <tr>
+          <td>3.1.3</td><td class="td-n">Taller de Hidráulica y Saneamiento (Planta Piloto)</td>
+          <td>Banco hidráulico de canalización (flujo abierto y cerrado), modelos a escala de planta de potabilización (coagulación, floculación, sedimentación, filtración, cloración), sistema demostrativo de agua potable a presión (tubería transparente), sistema de medición de caudal (vertedero, aforo), modelos de alcantarillado, equipo de bombeo (centrífuga, axial), bomba de ensayo Venturi + orificios + vertederos, manómetros y piezómetros</td>
+          <td class="td-c">15</td><td class="td-c">1</td>
+          <td class="td-c">100</td><td class="td-c td-bold">100</td>
+          <td>Agua y Saneamiento</td>
+          <td><span class="badge b-navy">ESPECÍFICA</span></td>
+        </tr>
+        <tr>
+          <td>3.1.4</td><td class="td-n">Taller de Productos Forestales y Carpintería Básica</td>
+          <td>Sierra de cinta, torno de madera, lijadora de banda, sierra circular de mesa, cepilladora, taladradora de banco, area de acabados con extractor de polvo, mesa de trabajo por puesto (8 ud.), armario de herramientas manuales, vitrina de muestras de maderas locales, zona de secado de tablones, piso impermeable con drenaje, equipo de EPP completo (orejeras, gafas, mascarillas P3, guantes), extintor polvo ABC</td>
+          <td class="td-c">15</td><td class="td-c">1</td>
+          <td class="td-c">90</td><td class="td-c td-bold">90</td>
+          <td>Forestación</td>
+          <td><span class="badge b-navy">ESPECÍFICA</span></td>
+        </tr>
+        <tr>
+          <td>3.1.5</td><td class="td-n">Taller de Educación Ambiental y Material Didáctico</td>
+          <td>Mesas de trabajo (10 ud.), herramientas para elaboración de material didáctico (cortadora de vinilo, impresora de gran formato, termoformado), vitrina de exposición de materiales ambientales, área de diseño de kits educativos, proyector, pantalla, área de práctica de presentaciones a grupos comunitarios, colección de materiales de reciclaje clasificado para actividades educativas</td>
+          <td class="td-c">20</td><td class="td-c">1</td>
+          <td class="td-c">60</td><td class="td-c td-bold">60</td>
+          <td>Conservación Ambiental / Gestión Amb.</td>
+          <td><span class="badge b-navy">ESPECÍFICA</span></td>
+        </tr>
+
+        <tr class="sz-row"><td colspan="9">3.2 — ÁREA DE PREPARACIÓN Y SOPORTE</td></tr>
+        <tr>
+          <td>3.2.1</td><td class="td-n">Bodega de equipos de taller y herramientas</td>
+          <td>Armarios metálicos con cerradura por área de trabajo, sistema de inventario de herramientas (tarjeta magnética por estudiante), cargadores de equipos portátiles, depósito de aceites y lubricantes (con bandeja de contención), área de limpieza de equipos, estantes para materiales a granel (arenas, gravas, sustratos)</td>
+          <td class="td-c">—</td><td class="td-c">2</td>
+          <td class="td-c">30</td><td class="td-c td-bold">60</td>
+          <td>Todos los talleres</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>3.2.2</td><td class="td-n">SSHH de talleres (con vestuario para campo)</td>
+          <td>Vestuario h/m con taquillas individuales (1 por estudiante de campo), duchas (4 h + 4 m), lavabos con jabón líquido, zona de secado de botas de campo, contenedor de ropa de trabajo sucia, SSHH discapacidad</td>
+          <td class="td-c">—</td><td class="td-c">2</td>
+          <td class="td-c">35</td><td class="td-c td-bold">70</td>
+          <td>Todos</td>
+          <td></td>
+        </tr>
+
+        <!-- Subtotal Z3 -->
+        <tr class="st-row">
+          <td colspan="6" class="td-bold">SUBTOTAL ZONA 3 — Área Neta</td>
+          <td class="td-c td-bold">580 m²</td><td colspan="2"></td>
+        </tr>
+        <tr class="st-row" style="background:#D4EDDA!important">
+          <td colspan="6" class="td-bold">SUBTOTAL ZONA 3 — Área Bruta (+30%)</td>
+          <td class="td-c td-bold">754 m²</td><td colspan="2"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="src"><strong>Fuente:</strong> Neufert E. (2013) Arte de proyectar en arquitectura, 16ª ed. Gustavo Gili, p. 280–295; MINEDU Perú RVM N° 140-2021 (art. 6.3 — talleres: 4,0–6,0 m²/est.); FAO — Infraestructura para centros de capacitación agropecuaria (2018, fao.org); MinEduc Ecuador UEM; Instituto Tecnológico Superior Riobamba (istriobamba.edu.ec) — descripción de talleres en carreras de campo.</p>
+
+  <!-- Organigrama Z3 -->
+  <div class="organo-wrap">
+    <div class="org-title">Organigrama funcional — Zona de Talleres y Prácticas (Z3)</div>
+    <div class="org-tree">
+      <div class="org-level"><div class="org-node">
+        <div class="org-box root">ZONA TALLERES (Z3)<br><small style="font-weight:400;font-size:8px">754 m² brutos</small></div>
+      </div></div>
+      <div class="org-line-down"></div>
+      <div class="org-flex-row">
+        <div class="org-flex-item"><div class="org-vline"></div>
+          <div class="org-box l1">Taller Equip.<br>de Campo</div></div>
+        <div class="org-flex-item"><div class="org-vline"></div>
+          <div class="org-box l1">Taller<br>Maquinaria Agr.</div></div>
+        <div class="org-flex-item"><div class="org-vline"></div>
+          <div class="org-box l1">Taller Hidráulica<br>Planta Piloto</div></div>
+        <div class="org-flex-item"><div class="org-vline"></div>
+          <div class="org-box l1">Taller Prod.<br>Forestal</div></div>
+        <div class="org-flex-item"><div class="org-vline"></div>
+          <div class="org-box l1">Taller Educ.<br>Ambiental</div></div>
+        <div class="org-flex-item"><div class="org-vline"></div>
+          <div class="org-box service-box">Bodega y<br>Vestuarios</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ZONA 4: ÁREAS EXTERIORES ══ -->
+<div class="section" id="z4">
+  <div class="sec-header">
+    <div class="sec-num">Z4</div>
+    <div>
+      <div class="sec-title">Zona de Prácticas Exteriores y Campo Experimental</div>
+      <div class="sec-sub">Infraestructura exterior especializada · Escenarios reales de formación</div>
+    </div>
+  </div>
+
+  <div class="justif">
+    <div class="justif-t">JUSTIFICACIÓN ZONA 4</div>
+    <p>Las carreras de ecología, agropecuaria y forestación requieren espacios exteriores como parte
+    indispensable del curriculum. No existe equivalente en aulas o laboratorios cerrados para la práctica
+    de manejo de cultivos, producción forestal o análisis de ecosistemas. La FAO establece que los centros
+    de capacitación agropecuaria deben contar con parcelas demostrativas de al menos 2.500 m², un vivero
+    con capacidad de producción real y acceso a ecosistemas representativos. El Tec. Azuay del Parque Industrial
+    no cuenta con estos espacios, lo que constituye una ventaja diferencial del campus propuesto.</p>
+    <p style="margin-top:6px"><strong>Fuente:</strong> FAO — Infraestructura para centros de capacitación agropecuaria y forestal, Roma 2018 (fao.org); UDA Tecnológicos rurales 2024 (referente: campus rural con parcelas demostrativas); MAATE Ecuador — Manual de protocolos de viveros forestales (2021, ambiente.gob.ec).</p>
+  </div>
+
+  <div class="prog-table-wrap">
+    <table class="prog-table">
+      <thead><tr>
+        <th>N°</th><th>Ambiente / Área Exterior</th><th>Descripción</th>
+        <th class="td-c">Cant.</th><th class="td-c">m²</th><th class="td-c">m² total</th>
+        <th>Carreras</th><th>Tipo</th>
+      </tr></thead>
+      <tbody>
+        <tr class="zone-row"><td colspan="8">ZONA 4 — PRÁCTICAS EXTERIORES Y CAMPO EXPERIMENTAL</td></tr>
+
+        <tr class="sz-row"><td colspan="8">4.1 — CAMPO EXPERIMENTAL AGROPECUARIO</td></tr>
+        <tr>
+          <td>4.1.1</td><td class="td-n">Parcelas demostrativas de cultivos (módulos)</td>
+          <td>12 parcelas de 200 m² cada una (sistema de rotación de cultivos): 4 parcelas de cultivos andinos (maíz, fréjol, papa, quinua), 4 parcelas de cultivos amazónicos (yuca, plátano, cacao, café), 2 parcelas de hortalizas, 1 parcela de plantas medicinales Zona 6, 1 parcela de recuperación de suelos degradados. Sistema de riego por goteo en todas. Cerco perimetral de tela gallinero, caminos de 1,2 m entre parcelas, señalización didáctica por parcela, acceso vehicular para maquinaria pequeña</td>
+          <td class="td-c">12</td><td class="td-c">200</td><td class="td-c td-bold">2.400</td>
+          <td>Producción Agropecuaria / Conservación</td>
+          <td><span class="badge b-navy">ESPECÍFICA</span></td>
+        </tr>
+        <tr>
+          <td>4.1.2</td><td class="td-n">Unidad animal demostrativa (módulo bovino/ovino)</td>
+          <td>Corral con cubierta liviana (300 m²), área de estabulación para 8 bovinos de referencia o 20 ovinos (rotación semestral), comedero, bebedero automático, sistema de limpieza y gestión de purines, cercado eléctrico demostrativo, área de manejo (bretes, balanza), botiquín veterinario, silo forrajero demostrativo. Acceso vehicular, cerca perimetral sólida</td>
+          <td class="td-c">1</td><td class="td-c">500</td><td class="td-c td-bold">500</td>
+          <td>Producción Agropecuaria</td>
+          <td><span class="badge b-navy">ESPECÍFICA</span></td>
+        </tr>
+        <tr>
+          <td>4.1.3</td><td class="td-n">Invernadero experimental (dos módulos)</td>
+          <td>Dos módulos de 120 m² c/u, estructura metálica galvanizada, cubierta de polietileno UV, ventilación cenital, sistema de riego tecnificado (goteo + nebulización), bancales modulares de acero, zona de aclimatación, termómetro/higrómetro digital, cuarto de bombas. Módulo 1: producción de hortalizas bajo cubierta. Módulo 2: producción de plantas medicinales y ornamentales nativas</td>
+          <td class="td-c">2</td><td class="td-c">120</td><td class="td-c td-bold">240</td>
+          <td>Producción Agropecuaria / Conservación</td>
+          <td><span class="badge b-navy">ESPECÍFICA</span></td>
+        </tr>
+
+        <tr class="sz-row"><td colspan="8">4.2 — VIVERO FORESTAL Y JARDÍN BOTÁNICO</td></tr>
+        <tr>
+          <td>4.2.1</td><td class="td-n">Vivero forestal de producción</td>
+          <td>Áreas bajo malla sombreadora (60%): zona de germinación (lecho de arena), zona de repique (bancales elevados con sustrato), zona de endurecimiento (a plena exposición solar), sistema de riego por microaspersión, área de llenado de fundas, almacén de insumos (sustratos, abonos, fungicidas) con cubierta, capacidad de producción: 20.000 plantas/semestre (especies nativas Zona 6), casa de mallas anti-insectos para semillero</td>
+          <td class="td-c">1</td><td class="td-c">800</td><td class="td-c td-bold">800</td>
+          <td>Forestación / Producción Agropecuaria / Conservación</td>
+          <td><span class="badge b-fac">COMPARTIDA FACULTAD</span></td>
+        </tr>
+        <tr>
+          <td>4.2.2</td><td class="td-n">Jardín botánico demostrativo (flora nativa Zona 6)</td>
+          <td>Colección viva de 80–120 especies de plantas nativas de los tres pisos altitudinales de la Zona 6 (páramo, valles interandinos, Amazonia), caminos de grava, señalización taxonómica (nombre científico + vulgar + uso + distribución), área de composición paisajística demostrativa, banco de germoplasma vivo, zona de cactáceas y suculentas andinas, zona húmeda (plantas riparias)</td>
+          <td class="td-c">1</td><td class="td-c">600</td><td class="td-c td-bold">600</td>
+          <td>Manejo RRNN / Conservación / Forestación</td>
+          <td><span class="badge b-fac">COMPARTIDA FACULTAD</span></td>
+        </tr>
+
+        <tr class="sz-row"><td colspan="8">4.3 — SISTEMAS DE AGUA Y ESTACIONES DE MONITOREO</td></tr>
+        <tr>
+          <td>4.3.1</td><td class="td-n">Sistema demostrativo de tratamiento de agua (exterior)</td>
+          <td>Unidad de sedimentación (tanque Imhoff demostrativo 3 m³), filtros lentos de arena y grava, sistema de cloración, estanque de depuración con macrófitas (humedal artificial 100 m²), medidores de caudal en línea, sistema de reutilización del agua tratada para riego de parcelas experimentales, señalización didáctica del proceso completo</td>
+          <td class="td-c">1</td><td class="td-c">300</td><td class="td-c td-bold">300</td>
+          <td>Agua y Saneamiento / Gestión Ambiental</td>
+          <td><span class="badge b-navy">ESPECÍFICA</span></td>
+        </tr>
+        <tr>
+          <td>4.3.2</td><td class="td-n">Estación meteorológica exterior automática</td>
+          <td>Torre meteorológica Davis Vantage Pro2 Plus (temperatura, HR, precipitación, viento, radiación solar, UV, presión barométrica, hoja de temperatura del suelo), datalogger con transmisión inalámbrica, pantalla de consulta pública en exterior, conexión a sistema de alerta temprana del campus. Plataforma pavimentada alrededor (5×5 m) con cercado de protección, UPS para respaldo energético</td>
+          <td class="td-c">1</td><td class="td-c">25</td><td class="td-c td-bold">25</td>
+          <td>Todas las carreras</td>
+          <td><span class="badge b-fac">COMPARTIDA FACULTAD</span></td>
+        </tr>
+
+        <tr class="sz-row"><td colspan="8">4.4 — BODEGA Y ÁREA DE MANTENIMIENTO EXTERIOR</td></tr>
+        <tr>
+          <td>4.4.1</td><td class="td-n">Bodega de campo y herramientas agrícolas</td>
+          <td>Armarios y ganchos para herramientas manuales (20 juegos), área de lavado y desinfección de herramientas, depósito de insumos agrícolas, almacenamiento de EPP de campo, cargadores de equipos, conexión a sistema eléctrico y agua</td>
+          <td class="td-c">1</td><td class="td-c">40</td><td class="td-c td-bold">40</td>
+          <td>Todas las carreras de campo</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>4.4.2</td><td class="td-n">Área de compostaje y manejo de residuos orgánicos</td>
+          <td>3 pilas de compostaje en rotación (madera o ladrillo, 4 m³ c/u), sistema de lombricultura demostrativo (2 m³), área de picado de material vegetal, techo de zinc sobre pilas activas, señalización del proceso, conexión hidráulica para humectación, sistema de lixiviados (tanque enterrado)</td>
+          <td class="td-c">1</td><td class="td-c">80</td><td class="td-c td-bold">80</td>
+          <td>Producción Agropecuaria / Gestión Ambiental</td>
+          <td><span class="badge b-fac">COMPARTIDA FACULTAD</span></td>
+        </tr>
+
+        <!-- Subtotal Z4 -->
+        <tr class="st-row">
+          <td colspan="5" class="td-bold">SUBTOTAL ZONA 4 — Áreas Exteriores</td>
+          <td class="td-c td-bold">4.985 m²</td><td colspan="2"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="src"><strong>Fuente:</strong> FAO — Establishing and managing school gardens, Rome 2019; FAO — Infraestructura y equipamiento para centros de capacitación agropecuaria, Rome 2018 (fao.org); MAATE Ecuador — Manual de protocolos viveros forestales comunitarios, 2021 (ambiente.gob.ec); UDA Tecnológicos rurales (formaciontecnologica.uazuay.edu.ec) — referente regional con campo experimental</p>
+
+  <!-- Organigrama Z4 -->
+  <div class="organo-wrap">
+    <div class="org-title">Organigrama funcional — Zona de Prácticas Exteriores (Z4)</div>
+    <div class="org-tree">
+      <div class="org-level"><div class="org-node">
+        <div class="org-box outdoor-box">ZONA EXTERIOR / CAMPO EXPERIMENTAL (Z4)<br><small style="font-weight:400;font-size:8px">4.985 m² exteriores</small></div>
+      </div></div>
+      <div class="org-line-down" style="background:#3A7A4A"></div>
+      <div class="org-flex-row" style="gap:12px">
+        <div class="org-flex-item"><div class="org-vline" style="background:#3A7A4A"></div>
+          <div class="org-box outdoor-box" style="font-size:9px;padding:8px 10px;min-width:120px">Campo Experimental<br>Agropecuario<br>(2.900 m²)</div></div>
+        <div class="org-flex-item"><div class="org-vline" style="background:#3A7A4A"></div>
+          <div class="org-box outdoor-box" style="font-size:9px;padding:8px 10px;min-width:120px">Vivero Forestal +<br>Jardín Botánico<br>(1.400 m²)</div></div>
+        <div class="org-flex-item"><div class="org-vline" style="background:#3A7A4A"></div>
+          <div class="org-box outdoor-box" style="font-size:9px;padding:8px 10px;min-width:120px">Sist. Agua +<br>Est. Meteorológica<br>(325 m²)</div></div>
+        <div class="org-flex-item"><div class="org-vline" style="background:#3A7A4A"></div>
+          <div class="org-box service-box" style="font-size:9px;padding:8px 10px;min-width:120px">Bodega campo +<br>Compostaje<br>(120 m²)</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ZONA 5: ADMINISTRATIVA ══ -->
+<div class="section" id="z5">
+  <div class="sec-header">
+    <div class="sec-num">Z5</div>
+    <div>
+      <div class="sec-title">Zona Administrativa y Docente</div>
+      <div class="sec-sub">Gestión institucional · 8–12 m²/puesto de trabajo</div>
+    </div>
+  </div>
+
+  <div class="justif">
+    <div class="justif-t">JUSTIFICACIÓN ZONA 5</div>
+    <p>La zona administrativa debe estar en relación directa con la zona académica (acceso de docentes
+    a sus oficinas desde los pasillos de aulas) pero diferenciada del flujo estudiantil masivo.
+    Se calculan: 1 docente por cada 10 estudiantes (estándar CES: relación docente-estudiante en tecnológicos),
+    lo que implica 180 docentes para 1.800 estudiantes. Con jornada parcial (30–40% a tiempo completo),
+    la planta física requiere oficinas para 60 docentes + 20 tutorías simultáneas.
+    El área administrativa institucional es parcialmente compartida con las otras facultades del campus.</p>
+    <p style="margin-top:6px"><strong>Fuente:</strong> CES Ecuador — Reglamento de Régimen Académico 2022, Art. 18 (relación docente-estudiante: mín. 1:25 tecnológicos); Neufert 2013 p. 210–220 (oficinas: 8–12 m²/puesto); MINEDU Perú 2021 (zona administrativa: 0,8 m²/estudiante).</p>
+  </div>
+
+  <div class="prog-table-wrap">
+    <table class="prog-table">
+      <thead><tr>
+        <th>N°</th><th>Ambiente</th><th>Descripción</th>
+        <th class="td-c">Cant.</th><th class="td-c">m² neto<br>c/u</th>
+        <th class="td-c">m² neto<br>total</th><th>Observación</th><th>Tipo</th>
+      </tr></thead>
+      <tbody>
+        <tr class="zone-row"><td colspan="8">ZONA 5 — ADMINISTRATIVA Y DOCENTE</td></tr>
+
+        <tr class="sz-row"><td colspan="8">5.1 — DECANATO Y DIRECCIÓN DE FACULTAD</td></tr>
+        <tr>
+          <td>5.1.1</td><td class="td-n">Dirección / Decanato de Facultad</td>
+          <td>Escritorio gerencial, sala de reunión para 6 personas, armario de archivo, computador, impresora, cámara de seguridad, acceso controlado</td>
+          <td class="td-c">1</td><td class="td-c">28</td><td class="td-c td-bold">28</td>
+          <td>Dirección de la Facultad</td><td></td>
+        </tr>
+        <tr>
+          <td>5.1.2</td><td class="td-n">Secretaría Académica de Facultad</td>
+          <td>2 puestos de atención (2 escritorios con computador e impresora multifuncional), mostrador de atención al público, archivo físico y digital, sala de espera para 8 personas (sillas de espera), fotocopiadora, punto de información académica</td>
+          <td class="td-c">1</td><td class="td-c">35</td><td class="td-c td-bold">35</td>
+          <td>Atención a estudiantes y docentes</td><td></td>
+        </tr>
+        <tr>
+          <td>5.1.3</td><td class="td-n">Sala de reuniones de facultad</td>
+          <td>Mesa de reunión para 12 personas, proyector + pantalla, sillas ergonómicas, pizarrón, teléfono de conferencias, WiFi dedicado, armario de documentos, ventilación climatizada</td>
+          <td class="td-c">1</td><td class="td-c">30</td><td class="td-c td-bold">30</td>
+          <td>Reuniones de coordinación académica</td><td></td>
+        </tr>
+        <tr>
+          <td>5.1.4</td><td class="td-n">Coordinaciones de carrera (6 oficinas)</td>
+          <td>Escritorio con computador, archivero, 2 sillas de visita, pizarrón pequeño de planificación</td>
+          <td class="td-c">6</td><td class="td-c">12</td><td class="td-c td-bold">72</td>
+          <td>Una por carrera</td><td></td>
+        </tr>
+
+        <tr class="sz-row"><td colspan="8">5.2 — ÁREA DOCENTE</td></tr>
+        <tr>
+          <td>5.2.1</td><td class="td-n">Sala de docentes (área común)</td>
+          <td>Área de trabajo con 20 puestos (computadores o escritorios), cocineta, casilleros individuales (60 unidades para toda la planta docente), tablón de anuncios, sala de descanso con sofás, dispensador de agua, impresora de red compartida</td>
+          <td class="td-c">1</td><td class="td-c">80</td><td class="td-c td-bold">80</td>
+          <td>Docentes tiempo completo y parcial</td><td></td>
+        </tr>
+        <tr>
+          <td>5.2.2</td><td class="td-n">Cubículos de docentes (tiempo completo)</td>
+          <td>Módulos de trabajo individual semi-abiertos (1,5 × 1,5 m por cubículo), computador, librero, privacidad acústica, iluminación natural + artificial regulable</td>
+          <td class="td-c">20</td><td class="td-c">4</td><td class="td-c td-bold">80</td>
+          <td>Docentes tiempo completo (estimado 20)</td><td></td>
+        </tr>
+        <tr>
+          <td>5.2.3</td><td class="td-n">Salas de tutoría / asesoría</td>
+          <td>Mesa de trabajo para 4 personas, pizarrón, computador, conectividad WiFi, aislamiento acústico básico</td>
+          <td class="td-c">6</td><td class="td-c">14</td><td class="td-c td-bold">84</td>
+          <td>Una por carrera — atención a estudiantes</td><td></td>
+        </tr>
+
+        <tr class="sz-row"><td colspan="8">5.3 — SERVICIOS ADMINISTRATIVOS</td></tr>
+        <tr>
+          <td>5.3.1</td><td class="td-n">Bodega de documentos / archivo histórico</td>
+          <td>Estanterías metálicas, sistema de clasificación por año y carrera, deshumidificador, acceso restringido</td>
+          <td class="td-c">1</td><td class="td-c">20</td><td class="td-c td-bold">20</td>
+          <td>Uso administrativo</td><td></td>
+        </tr>
+        <tr>
+          <td>5.3.2</td><td class="td-n">SSHH de zona administrativa</td>
+          <td>SSHH h + m independientes (2 inodoros + 2 lavabos c/u), SSHH discapacidad, acabados de calidad media, espejo, dispensadores</td>
+          <td class="td-c">2</td><td class="td-c">16</td><td class="td-c td-bold">32</td>
+          <td>Para docentes y administrativos</td><td></td>
+        </tr>
+
+        <!-- Subtotal Z5 -->
+        <tr class="st-row">
+          <td colspan="5" class="td-bold">SUBTOTAL ZONA 5 — Área Neta</td>
+          <td class="td-c td-bold">461 m²</td><td colspan="2"></td>
+        </tr>
+        <tr class="st-row" style="background:#D4EDDA!important">
+          <td colspan="5" class="td-bold">SUBTOTAL ZONA 5 — Área Bruta (+25%)</td>
+          <td class="td-c td-bold">576 m²</td><td colspan="2"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="src"><strong>Fuente:</strong> CES Ecuador — Reglamento Régimen Académico 2022 Art. 18 (relación docente-estudiante); Neufert E. (2013) 16ª ed. p. 210–220 (oficinas administrativas); MINEDU Perú RVM 140-2021 (zona administrativa 0,8 m²/est.); Instituto Tec. Superior Riobamba — estructura orgánica (istriobamba.edu.ec/index.php/autoridades)</p>
+</div>
+
+<!-- ══ ZONA 6: INVESTIGACIÓN Y VINCULACIÓN ══ -->
+<div class="section" id="z6">
+  <div class="sec-header">
+    <div class="sec-num">Z6</div>
+    <div>
+      <div class="sec-title">Zona de Investigación, Vinculación y Extensión</div>
+      <div class="sec-sub">Transferencia de tecnología y articulación con el sector productivo</div>
+    </div>
+  </div>
+
+  <div class="justif">
+    <div class="justif-t">JUSTIFICACIÓN ZONA 6</div>
+    <p>La OIT/Cinterfor (2017) establece que los centros de formación técnica deben evolucionar hacia
+    <strong>Centros de Tecnología con vinculación directa al sector productivo</strong>. El Tec. Azuay
+    opera con modelo dual (95% empleabilidad). Esta zona permite al campus articularse con GADs,
+    empresas, comunidades y organismos internacionales (GEF, UNDP, WWF presentes en Zona 6)
+    para proyectos reales que sirvan como escenario de aprendizaje, generación de ingresos propios
+    y posicionamiento institucional. La LOES 2022 (Art. 107) establece la vinculación con la sociedad
+    como función sustantiva de las IES.</p>
+    <p style="margin-top:6px"><strong>Fuente:</strong> OIT/Cinterfor (2017) El futuro de la FP en ALC (ISBN: 978-92-9088-274-9); LOES 2022 Art. 107 (vinculación); El Mercurio oct. 2022 (Tec. Azuay modelo dual 95%); UNDP Ecuador — proyectos activos Zona 6 (ec.undp.org)</p>
+  </div>
+
+  <div class="prog-table-wrap">
+    <table class="prog-table">
+      <thead><tr>
+        <th>N°</th><th>Ambiente</th><th>Descripción</th>
+        <th class="td-c">Cant.</th><th class="td-c">m² neto</th>
+        <th class="td-c">m² total</th><th>Observación</th><th>Tipo</th>
+      </tr></thead>
+      <tbody>
+        <tr class="zone-row"><td colspan="8">ZONA 6 — INVESTIGACIÓN, VINCULACIÓN Y EXTENSIÓN</td></tr>
+
+        <tr>
+          <td>6.1</td><td class="td-n">Centro de Investigación Ambiental y Agroproductiva</td>
+          <td>Área de trabajo para 6–8 investigadores docentes/externos, computadores de análisis de datos, biblioteca especializada (200 títulos + suscripciones digitales), sala de reuniones pequeña (6 personas), archivo de proyectos, acceso controlado de investigadores externos</td>
+          <td class="td-c">1</td><td class="td-c">80</td><td class="td-c td-bold">80</td>
+          <td>Proyectos institucionales e interinstitucionales</td>
+          <td><span class="badge b-share">COMPARTIDA 3 FAC.</span></td>
+        </tr>
+        <tr>
+          <td>6.2</td><td class="td-n">Sala de vinculación con comunidades</td>
+          <td>Sala multipropósito (40 personas), proyector, pantalla, sillas apilables, mesas modulares, cocineta pequeña, acceso independiente desde el exterior del campus para recibir comunidades sin interferir con el área académica</td>
+          <td class="td-c">1</td><td class="td-c">50</td><td class="td-c td-bold">50</td>
+          <td>Reuniones con GADs, comunidades, empresas</td>
+          <td><span class="badge b-share">COMPARTIDA 3 FAC.</span></td>
+        </tr>
+        <tr>
+          <td>6.3</td><td class="td-n">Repositorio de muestras y banco de germoplasma</td>
+          <td>Estanterías de colecciones de suelos, agua, vegetación y semillas de la Zona 6, sistema de conservación en frío (refrigerador -4°C), catálogo digital de muestras, área de préstamo controlado para investigación</td>
+          <td class="td-c">1</td><td class="td-c">30</td><td class="td-c td-bold">30</td>
+          <td>Banco de germoplasma nativo Zona 6</td>
+          <td><span class="badge b-navy">ESPECÍFICA</span></td>
+        </tr>
+        <tr>
+          <td>6.4</td><td class="td-n">Área de publicaciones y divulgación</td>
+          <td>2 puestos de trabajo editorial, computadores de diseño, impresora de gran formato, área de archivo de publicaciones institucionales, vitrina de exposición de resultados de investigación</td>
+          <td class="td-c">1</td><td class="td-c">25</td><td class="td-c td-bold">25</td>
+          <td>Revista institucional, informes técnicos</td>
+          <td><span class="badge b-share">COMPARTIDA 3 FAC.</span></td>
+        </tr>
+
+        <tr class="st-row">
+          <td colspan="5" class="td-bold">SUBTOTAL ZONA 6 — Área Neta</td>
+          <td class="td-c td-bold">185 m²</td><td colspan="2"></td>
+        </tr>
+        <tr class="st-row" style="background:#D4EDDA!important">
+          <td colspan="5" class="td-bold">SUBTOTAL ZONA 6 — Área Bruta (+25%)</td>
+          <td class="td-c td-bold">231 m²</td><td colspan="2"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="src"><strong>Fuente:</strong> OIT/Cinterfor (2017); LOES 2022 Art. 107; UNDP Ecuador (ec.undp.org); MAATE Ecuador banco germoplasma (ambiente.gob.ec)</p>
+</div>
+
+<!-- ══ ZONA 7: SERVICIOS ESTUDIANTILES ══ -->
+<div class="section" id="z7">
+  <div class="sec-header">
+    <div class="sec-num">Z7</div>
+    <div>
+      <div class="sec-title">Zona de Servicios Estudiantiles</div>
+      <div class="sec-sub">Bienestar, consulta y permanencia · Parcialmente compartida con las 3 facultades</div>
+    </div>
+  </div>
+
+  <div class="nota-shared" style="margin-bottom:16px">
+    <strong>🔶 ÁREAS COMPARTIDAS CON LAS 3 FACULTADES:</strong> Los ambientes de bienestar estudiantil,
+    comedor, biblioteca general, auditorio y espacios deportivos se dimensionan y comparten
+    para todo el campus (5.000–7.000 estudiantes). En esta tabla se consignan únicamente los servicios
+    <strong>específicos de esta facultad</strong> o la cuota proporcional de los compartidos
+    asignada a la Facultad de Ecología (~26% del total campus).
+  </div>
+
+  <div class="prog-table-wrap">
+    <table class="prog-table">
+      <thead><tr>
+        <th>N°</th><th>Ambiente</th><th>Descripción</th>
+        <th class="td-c">Cant.</th><th class="td-c">m² neto</th>
+        <th class="td-c">m² total</th><th>Tipo</th>
+      </tr></thead>
+      <tbody>
+        <tr class="zone-row"><td colspan="7">ZONA 7 — SERVICIOS ESTUDIANTILES</td></tr>
+
+        <tr class="sz-row"><td colspan="7">7.1 — BIBLIOTECA Y RECURSOS ACADÉMICOS</td></tr>
+        <tr>
+          <td>7.1.1</td><td class="td-n">Biblioteca especializada de Facultad</td>
+          <td>Estanterías de acceso libre (2.000 volúmenes: ecología, agronomía, forestación, hidrología), 20 puestos de lectura individual, 4 mesas de trabajo grupal (4 personas c/u), 8 computadores de consulta online (bases de datos: Scopus, JSTOR, SciELO, FAO Digital Library), carné de préstamo, zona silenciosa con panel acústico, control de acceso con carné estudiantil</td>
+          <td class="td-c">1</td><td class="td-c">120</td><td class="td-c td-bold">120</td>
+          <td><span class="badge b-navy">ESPECÍFICA FAC.</span></td>
+        </tr>
+        <tr>
+          <td>7.1.2</td><td class="td-n">Sala de computación de acceso libre</td>
+          <td>20 computadores de acceso libre (sistema de turnos 1h), impresión de bajo costo (0,03$/hoja), escáner, zona WiFi de alta densidad (100+ Mbps dedicados), sillas ergonómicas, supervisión por asistente académico</td>
+          <td class="td-c">1</td><td class="td-c">50</td><td class="td-c td-bold">50</td>
+          <td><span class="badge b-navy">ESPECÍFICA FAC.</span></td>
+        </tr>
+
+        <tr class="sz-row"><td colspan="7">7.2 — BIENESTAR ESTUDIANTIL (CUOTA FACULTAD — 26%)</td></tr>
+        <tr>
+          <td>7.2.1</td><td class="td-n">Comedor / cafetería (cuota facultad)</td>
+          <td>Cuota del 26% del comedor general del campus (diseñado para todo el campus: 400 puestos simultáneos). Esta facultad aporta ~104 puestos. Bar de bebidas, zona de cajas, área de servicio de almuerzo, zona de limpieza de bandejas, acceso desde todas las facultades</td>
+          <td class="td-c">—</td><td class="td-c">—</td>
+          <td class="td-c td-bold">208</td>
+          <td><span class="badge b-share">COMPARTIDA CAMPUS</span></td>
+        </tr>
+        <tr>
+          <td>7.2.2</td><td class="td-n">Área de descanso / esparcimiento exterior</td>
+          <td>Zona ajardinada adyacente a la facultad, pérgolas con sillas/bancas, WiFi exterior, área de lectura al aire libre, tablero de anuncios exterior, zona de exposición de trabajos estudiantiles</td>
+          <td class="td-c">1</td><td class="td-c">200</td><td class="td-c td-bold">200</td>
+          <td><span class="badge b-navy">ESPECÍFICA FAC.</span></td>
+        </tr>
+        <tr>
+          <td>7.2.3</td><td class="td-n">Servicio de bienestar estudiantil (cuota facultad)</td>
+          <td>Cuota del 26% del área de bienestar central del campus: psicología, trabajo social, médico, odontología de emergencia, bolsa de empleo. Esta facultad aporta ~26 m² de uso proporcional</td>
+          <td class="td-c">—</td><td class="td-c">—</td>
+          <td class="td-c td-bold">26</td>
+          <td><span class="badge b-share">COMPARTIDA CAMPUS</span></td>
+        </tr>
+        <tr>
+          <td>7.2.4</td><td class="td-n">Lockers estudiantiles</td>
+          <td>Módulo de 80 lockers (1/3 de los estudiantes que los requieren, uso rotativo diario), material metálico galvanizado, llave o combinación digital, adosado a corredor exterior o hall</td>
+          <td class="td-c">2</td><td class="td-c">12</td><td class="td-c td-bold">24</td>
+          <td><span class="badge b-navy">ESPECÍFICA FAC.</span></td>
+        </tr>
+
+        <tr class="sz-row"><td colspan="7">7.3 — SERVICIOS SANITARIOS ESTUDIANTILES</td></tr>
+        <tr>
+          <td>7.3.1</td><td class="td-n">SSHH estudiantes mujeres (por bloque)</td>
+          <td>4 inodoros + 4 lavabos + 1 cambiador de bebé, espejo, dispensadores de jabón y toallas de papel, papeleras con tapa, ventilación natural + extractor, acabados cerámicos fácil limpieza, acceso desde corredor principal</td>
+          <td class="td-c">4</td><td class="td-c">20</td><td class="td-c td-bold">80</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>7.3.2</td><td class="td-n">SSHH estudiantes hombres (por bloque)</td>
+          <td>3 inodoros + 2 urinarios + 4 lavabos, espejo, dispensadores, ventilación</td>
+          <td class="td-c">4</td><td class="td-c">18</td><td class="td-c td-bold">72</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>7.3.3</td><td class="td-n">SSHH accesibilidad universal</td>
+          <td>Inodoro con barras de apoyo, lavabo con espacio inferior libre, espejo inclinado, timbre de emergencia, espacio de maniobra ø 1,50 m, señalética táctil en acceso</td>
+          <td class="td-c">4</td><td class="td-c">5</td><td class="td-c td-bold">20</td>
+          <td>LOES Art. 356</td>
+        </tr>
+
+        <!-- Subtotal Z7 -->
+        <tr class="st-row">
+          <td colspan="5" class="td-bold">SUBTOTAL ZONA 7 — Área Neta</td>
+          <td class="td-c td-bold">800 m²</td><td></td>
+        </tr>
+        <tr class="st-row" style="background:#D4EDDA!important">
+          <td colspan="5" class="td-bold">SUBTOTAL ZONA 7 — Área Bruta (+20%)</td>
+          <td class="td-c td-bold">960 m²</td><td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="src"><strong>Fuente:</strong> MINEDU Perú RVM N° 140-2021 (art. 6.5 — bienestar: SSHH 1 inodoro/30 est.); LOES 2022 Art. 356 (accesibilidad universal obligatoria); Neufert E. (2013) 16ª ed. p. 295–310 (servicios sanitarios); MinEduc Ecuador UEM BID-2017</p>
+</div>
+
+<!-- ══ ORGANIGRAMA GENERAL ══ -->
+<div class="section" id="organo">
+  <div class="sec-header">
+    <div class="sec-num">08</div>
+    <div>
+      <div class="sec-title">Organigrama Funcional General</div>
+      <div class="sec-sub">Relaciones espaciales y jerarquías de la Facultad de Ecología, Geología y Recursos Naturales</div>
+    </div>
+  </div>
+
+  <div class="organo-wrap">
+    <div class="org-title">Organigrama funcional integral — Facultad de Ecología, Geología y Recursos Naturales</div>
+
+    <!-- Nivel 0: Acceso -->
+    <div class="org-tree">
+      <div class="org-level">
+        <div class="org-node">
+          <div class="org-box service-box" style="min-width:220px;font-size:10px">
+            🚶 ACCESO PRINCIPAL AL CAMPUS<br>
+            <small style="font-weight:400">Hall de bienvenida · Control de ingreso · Señalética</small>
+          </div>
+        </div>
+      </div>
+      <div class="org-line-down"></div>
+
+      <!-- Nivel 1: Facultad -->
+      <div class="org-level">
+        <div class="org-node">
+          <div class="org-box root" style="min-width:280px">
+            🌿 FACULTAD DE ECOLOGÍA, GEOLOGÍA Y RECURSOS NATURALES<br>
+            <small style="font-weight:400;font-size:8px">Decanato · Secretaría Académica · Coordinaciones</small>
+          </div>
+        </div>
+      </div>
+      <div class="org-line-down"></div>
+
+      <!-- Nivel 2: Zonas principales -->
+      <div class="org-flex-row" style="gap:10px">
+        <div class="org-flex-item">
+          <div class="org-vline"></div>
+          <div class="org-box l1" style="min-width:130px">Z1 ACADÉMICA<br><small style="font-weight:400">Aulas A, B, TIC<br>2.673 m²</small></div>
+          <div class="org-vline"></div>
+          <div class="org-flex-row" style="gap:6px;margin-top:0">
+            <div class="org-flex-item"><div class="org-vline"></div><div class="org-box l3" style="min-width:80px;font-size:8px">12 Aulas<br>Tipo A</div></div>
+            <div class="org-flex-item"><div class="org-vline"></div><div class="org-box l3" style="min-width:80px;font-size:8px">6 Aulas<br>Tipo B</div></div>
+            <div class="org-flex-item"><div class="org-vline"></div><div class="org-box l3" style="min-width:80px;font-size:8px">5 Aulas<br>TIC</div></div>
+          </div>
+        </div>
+
+        <div class="org-flex-item">
+          <div class="org-vline"></div>
+          <div class="org-box l1" style="min-width:130px">Z2 LABORATORIOS<br><small style="font-weight:400">9 labs especializados<br>1.405 m²</small></div>
+          <div class="org-vline"></div>
+          <div class="org-flex-row" style="gap:6px;margin-top:0">
+            <div class="org-flex-item"><div class="org-vline"></div><div class="org-box l3" style="min-width:80px;font-size:8px">5 Labs<br>Compartidos</div></div>
+            <div class="org-flex-item"><div class="org-vline"></div><div class="org-box l3" style="min-width:80px;font-size:8px">4 Labs<br>Específicos</div></div>
+          </div>
+        </div>
+
+        <div class="org-flex-item">
+          <div class="org-vline"></div>
+          <div class="org-box l1" style="min-width:130px">Z3 TALLERES<br><small style="font-weight:400">5 talleres<br>754 m²</small></div>
+          <div class="org-vline"></div>
+          <div class="org-flex-row" style="gap:6px;margin-top:0">
+            <div class="org-flex-item"><div class="org-vline"></div><div class="org-box l3" style="min-width:80px;font-size:8px">Campo<br>Topografía</div></div>
+            <div class="org-flex-item"><div class="org-vline"></div><div class="org-box l3" style="min-width:80px;font-size:8px">Maquinaria +<br>Hidráulica</div></div>
+            <div class="org-flex-item"><div class="org-vline"></div><div class="org-box l3" style="min-width:80px;font-size:8px">Forestal +<br>Educ.Amb.</div></div>
+          </div>
+        </div>
+
+        <div class="org-flex-item">
+          <div class="org-vline"></div>
+          <div class="org-box outdoor-box" style="min-width:130px">Z4 EXTERIOR<br><small style="font-weight:400">Campo experimental<br>4.985 m²</small></div>
+          <div class="org-vline" style="background:#3A7A4A"></div>
+          <div class="org-flex-row" style="gap:6px;margin-top:0">
+            <div class="org-flex-item"><div class="org-vline" style="background:#3A7A4A"></div><div class="org-box outdoor-box" style="min-width:80px;font-size:8px;padding:6px">Parcelas<br>Agropec.</div></div>
+            <div class="org-flex-item"><div class="org-vline" style="background:#3A7A4A"></div><div class="org-box outdoor-box" style="min-width:80px;font-size:8px;padding:6px">Vivero<br>Forestal</div></div>
+            <div class="org-flex-item"><div class="org-vline" style="background:#3A7A4A"></div><div class="org-box outdoor-box" style="min-width:80px;font-size:8px;padding:6px">Jardín<br>Botánico</div></div>
+          </div>
+        </div>
+
+        <div class="org-flex-item">
+          <div class="org-vline"></div>
+          <div class="org-box l1" style="min-width:130px">Z5 + Z6 + Z7<br><small style="font-weight:400">Admin. + Invest. + Servicios<br>1.767 m²</small></div>
+          <div class="org-vline"></div>
+          <div class="org-flex-row" style="gap:6px;margin-top:0">
+            <div class="org-flex-item"><div class="org-vline"></div><div class="org-box l3" style="min-width:80px;font-size:8px">Decanato<br>Docentes</div></div>
+            <div class="org-flex-item"><div class="org-vline"></div><div class="org-box research-box" style="min-width:80px;font-size:8px">Centro<br>Investigación</div></div>
+            <div class="org-flex-item"><div class="org-vline"></div><div class="org-box service-box" style="min-width:80px;font-size:8px">Biblioteca<br>SSHH</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Nivel campus compartido -->
+      <div style="margin-top:20px;border-top:2px dashed var(--gold);padding-top:16px">
+        <div style="font-size:9px;font-weight:700;color:var(--gold);letter-spacing:2px;text-align:center;margin-bottom:12px">
+          ── ÁREAS COMPARTIDAS CON LAS 3 FACULTADES DEL CAMPUS (INFRAESTRUCTURA COMÚN) ──
+        </div>
+        <div class="org-flex-row" style="gap:12px">
+          <div class="org-flex-item">
+            <div class="org-box shared-box" style="min-width:110px;font-size:9px;padding:8px 10px">🍽️ Comedor Central<br>(400 puestos)</div>
+          </div>
+          <div class="org-flex-item">
+            <div class="org-box shared-box" style="min-width:110px;font-size:9px;padding:8px 10px">📚 Biblioteca General<br>(5.000+ vol.)</div>
+          </div>
+          <div class="org-flex-item">
+            <div class="org-box shared-box" style="min-width:110px;font-size:9px;padding:8px 10px">🎭 Auditorio Principal<br>(300 asientos)</div>
+          </div>
+          <div class="org-flex-item">
+            <div class="org-box shared-box" style="min-width:110px;font-size:9px;padding:8px 10px">⚽ Áreas Deportivas<br>(canchas multiuso)</div>
+          </div>
+          <div class="org-flex-item">
+            <div class="org-box shared-box" style="min-width:110px;font-size:9px;padding:8px 10px">🏥 Bienestar Estudiantil<br>(psicología, médico)</div>
+          </div>
+          <div class="org-flex-item">
+            <div class="org-box shared-box" style="min-width:110px;font-size:9px;padding:8px 10px">🔬 Centro Investigación<br>Interinstitucional</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="leyenda" style="margin-top:16px">
+      <div class="ley-item"><div class="ley-dot" style="background:var(--fac)"></div><span>Nodo raíz / facultad</span></div>
+      <div class="ley-item"><div class="ley-dot" style="background:var(--fac2)"></div><span>Zona académica principal</span></div>
+      <div class="ley-item"><div class="ley-dot" style="background:var(--light);border:1px solid var(--fac3)"></div><span>Ambiente específico</span></div>
+      <div class="ley-item"><div class="ley-dot" style="background:#3A7A4A"></div><span>Zona exterior / campo</span></div>
+      <div class="ley-item"><div class="ley-dot" style="background:var(--steel)"></div><span>Servicios / soporte</span></div>
+      <div class="ley-item"><div class="ley-dot" style="background:var(--navy2)"></div><span>Investigación</span></div>
+      <div class="ley-item"><div class="ley-dot" style="background:var(--gold)"></div><span>Áreas compartidas 3 facultades</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ RESUMEN ══ -->
+<div class="section" id="resumen">
+  <div class="sec-header">
+    <div class="sec-num">09</div>
+    <div>
+      <div class="sec-title">Resumen del Programa Arquitectónico</div>
+      <div class="sec-sub">Cuadro consolidado de áreas — Facultad de Ecología, Geología y Recursos Naturales</div>
+    </div>
+  </div>
+
+  <!-- KPIs resumen -->
+  <div class="g4">
+    <div class="kpi-prog">
+      <div class="kpi-v">17.640</div>
+      <div class="kpi-l">m² construidos totales (bruto)</div>
+      <div class="kpi-s">Incluyendo áreas exteriores cubiertas</div>
+    </div>
+    <div class="kpi-prog">
+      <div class="kpi-v">9,8 m²</div>
+      <div class="kpi-l">m² construidos / estudiante</div>
+      <div class="kpi-s">Sobre 1.800 estudiantes activos</div>
+    </div>
+    <div class="kpi-prog">
+      <div class="kpi-v">4.985</div>
+      <div class="kpi-l">m² áreas exteriores especializadas</div>
+      <div class="kpi-s">Campo experimental + vivero + jardín</div>
+    </div>
+    <div class="kpi-prog">
+      <div class="kpi-v">22.625</div>
+      <div class="kpi-l">m² huella total facultad</div>
+      <div class="kpi-s">Construido + exteriores especializados</div>
+    </div>
+  </div>
+
+  <!-- Tabla resumen final -->
+  <div class="prog-table-wrap">
+    <table class="prog-table">
+      <thead><tr>
+        <th>Zona</th><th>Descripción</th>
+        <th class="td-c">m² neto</th>
+        <th class="td-c">Factor circ./est.</th>
+        <th class="td-c">m² bruto</th>
+        <th class="td-c">% del total</th>
+        <th>Norma / Fuente</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="td-n">Z1</td><td>Zona Académica — Aulas teóricas, TIC, seminario</td>
+          <td class="td-c">2.056</td><td class="td-c">+30%</td>
+          <td class="td-c td-bold">2.673</td><td class="td-c">15,1%</td>
+          <td>MINEDU Perú 2021 (1,8 m²/est.) · MinEduc Ecuador</td>
+        </tr>
+        <tr>
+          <td class="td-n">Z2</td><td>Zona de Laboratorios Especializados</td>
+          <td class="td-c">1.081</td><td class="td-c">+30%</td>
+          <td class="td-c td-bold">1.405</td><td class="td-c">7,9%</td>
+          <td>MINEDU Perú 2021 (3,5 m²/est.) · SENESCYT PRETT · Neufert</td>
+        </tr>
+        <tr>
+          <td class="td-n">Z3</td><td>Zona de Talleres y Prácticas</td>
+          <td class="td-c">580</td><td class="td-c">+30%</td>
+          <td class="td-c td-bold">754</td><td class="td-c">4,3%</td>
+          <td>Neufert 2013 (5,5 m²/est.) · MINEDU Perú 2021</td>
+        </tr>
+        <tr>
+          <td class="td-n">Z4</td><td>Zona Exterior — Campo experimental, vivero, jardín</td>
+          <td class="td-c">4.985</td><td class="td-c">—</td>
+          <td class="td-c td-bold">4.985</td><td class="td-c">28,2%</td>
+          <td>FAO 2018 (mín. 2.500 m² parcelas) · MAATE Ecuador 2021</td>
+        </tr>
+        <tr>
+          <td class="td-n">Z5</td><td>Zona Administrativa y Docente</td>
+          <td class="td-c">461</td><td class="td-c">+25%</td>
+          <td class="td-c td-bold">576</td><td class="td-c">3,3%</td>
+          <td>CES 2022 · Neufert 2013 (8–12 m²/puesto)</td>
+        </tr>
+        <tr>
+          <td class="td-n">Z6</td><td>Zona de Investigación y Vinculación</td>
+          <td class="td-c">185</td><td class="td-c">+25%</td>
+          <td class="td-c td-bold">231</td><td class="td-c">1,3%</td>
+          <td>OIT/Cinterfor 2017 · LOES 2022 Art. 107</td>
+        </tr>
+        <tr>
+          <td class="td-n">Z7</td><td>Zona de Servicios Estudiantiles + cuotas campus</td>
+          <td class="td-c">800</td><td class="td-c">+20%</td>
+          <td class="td-c td-bold">960</td><td class="td-c">5,4%</td>
+          <td>MINEDU Perú 2021 · LOES Art. 356 · Neufert 2013</td>
+        </tr>
+        <tr>
+          <td class="td-n">Z8</td><td>Circulación general + estructura + muros (cota campus)</td>
+          <td class="td-c">—</td><td class="td-c">—</td>
+          <td class="td-c td-bold">3.056</td><td class="td-c">17,3%</td>
+          <td>Estimación estructural 15–18% del total construido</td>
+        </tr>
+        <tr>
+          <td class="td-n">Z9</td><td>Áreas de tránsito exterior, plazas, accesos, jardinería</td>
+          <td class="td-c">—</td><td class="td-c">—</td>
+          <td class="td-c td-bold">3.000</td><td class="td-c">17,0%</td>
+          <td>PUGS Cuenca 2019 (5 m²/est. exteriores no especializados)</td>
+        </tr>
+        <!-- Total -->
+        <tr class="tot-row">
+          <td class="td-bold" colspan="2">TOTAL FACULTAD — ÁREA BRUTA CONSTRUIDA (Z1+Z2+Z3+Z5+Z6+Z7+Z8)</td>
+          <td class="td-c td-bold">—</td><td class="td-c">—</td>
+          <td class="td-c td-bold">9.655 m²</td>
+          <td class="td-c">—</td><td>—</td>
+        </tr>
+        <tr style="background:var(--fac3)!important;color:#fff;font-weight:700">
+          <td class="td-bold" colspan="2">TOTAL FACULTAD — HUELLA TOTAL (incluye Z4 + Z9 exteriores)</td>
+          <td class="td-c td-bold">—</td><td class="td-c">—</td>
+          <td class="td-c td-bold">17.640 m²</td>
+          <td class="td-c">100%</td><td>—</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Resumen por tipo -->
+  <div class="g3" style="margin-top:18px">
+    <div class="card">
+      <div class="card-title">Distribución por tipo de espacio</div>
+      <table class="prog-table">
+        <thead><tr><th>Tipo de espacio</th><th class="td-c">m² bruto</th><th class="td-c">%</th></tr></thead>
+        <tbody>
+          <tr><td>Académico (aulas + TIC)</td><td class="td-c">2.673</td><td class="td-c">27,7%</td></tr>
+          <tr><td>Práctica (labs + talleres)</td><td class="td-c">2.159</td><td class="td-c">22,4%</td></tr>
+          <tr><td>Exterior especializado</td><td class="td-c">4.985</td><td class="td-c">51,6%</td></tr>
+          <tr><td>Admin. + Investigación</td><td class="td-c">807</td><td class="td-c">8,4%</td></tr>
+          <tr><td>Servicios estudiantiles</td><td class="td-c">960</td><td class="td-c">9,9%</td></tr>
+          <tr class="tot-row"><td><strong>TOTAL</strong></td><td class="td-c"><strong>9.655</strong></td><td class="td-c"><strong>100%</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title">Espacios compartidos vs. específicos</div>
+      <table class="prog-table">
+        <thead><tr><th>Categoría</th><th class="td-c">m²</th><th class="td-c">%</th></tr></thead>
+        <tbody>
+          <tr><td>Específicos de la facultad</td><td class="td-c">7.250</td><td class="td-c">75,1%</td></tr>
+          <tr><td>Compartidos entre carreras de la facultad</td><td class="td-c">1.405</td><td class="td-c">14,5%</td></tr>
+          <tr><td>Compartidos con las 3 facultades del campus</td><td class="td-c">1.000</td><td class="td-c">10,4%</td></tr>
+          <tr class="tot-row"><td><strong>TOTAL</strong></td><td class="td-c"><strong>9.655</strong></td><td class="td-c"><strong>100%</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title">Validación de indicadores</div>
+      <table class="prog-table">
+        <thead><tr><th>Indicador</th><th class="td-c">Valor proyecto</th><th class="td-c">Ref. norma</th></tr></thead>
+        <tbody>
+          <tr><td>m² construidos / estudiante</td><td class="td-c">9,8 m²</td><td class="td-c">9–14 m²</td></tr>
+          <tr><td>m² laboratorios / estudiante</td><td class="td-c">0,78 m²</td><td class="td-c">0,5–1,0 m²</td></tr>
+          <tr><td>m² aula / estudiante simultáneo</td><td class="td-c">2,97 m²</td><td class="td-c">1,8–2,5 m²</td></tr>
+          <tr><td>m² exteriores / estudiante</td><td class="td-c">4,4 m²</td><td class="td-c">≥ 5 m² MINEDU</td></tr>
+          <tr><td>m² admin. / estudiante</td><td class="td-c">0,32 m²</td><td class="td-c">0,3–0,8 m²</td></tr>
+          <tr><td>m² SSHH / est. (1 inod./30 est.)</td><td class="td-c">1 inod./22 est.</td><td class="td-c">1/30 est. mín.</td></tr>
+        </tbody>
+      </table>
+      <p class="src" style="margin-top:8px"><strong>Refs:</strong> MINEDU Perú 2021 · Neufert 2013 · FEUP 2024 (9 m²/est.) · SENESCYT PRETT 2021</p>
+    </div>
+  </div>
+
+  <!-- Summary box final -->
+  <div class="summary-box">
+    <div class="summary-title">SÍNTESIS EJECUTIVA — PROGRAMA ARQUITECTÓNICO FACULTAD 1</div>
+    <div class="summary-grid">
+      <div class="sg-item">
+        <div class="sg-v">6</div>
+        <div class="sg-l">Carreras tecnológicas de 5 semestres</div>
+      </div>
+      <div class="sg-item">
+        <div class="sg-v">1.800</div>
+        <div class="sg-l">Estudiantes activos en fase madura</div>
+      </div>
+      <div class="sg-item">
+        <div class="sg-v">9.655 m²</div>
+        <div class="sg-l">Área bruta construida</div>
+      </div>
+      <div class="sg-item">
+        <div class="sg-v">4.985 m²</div>
+        <div class="sg-l">Campo experimental exterior especializado</div>
+      </div>
+      <div class="sg-item">
+        <div class="sg-v">9,8 m²/est.</div>
+        <div class="sg-l">Índice de superficie · Entre ref. FEUP y norma LATAM</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /cnt -->
+
+<!-- FOOTER -->
+<div class="ftr">
+  <div class="ftr-grid">
+    <div>• MINEDU Perú. (2021). RVM N° 140-2021 — Criterios de Diseño Institutos Educ. Sup. Tecnológica. gob.pe/minedu</div>
+    <div>• MinEduc Ecuador / BID. (2017). Normas Técnicas UEM. educacion.gob.ec</div>
+    <div>• SENESCYT. (2021). Proyecto PRETT — Reconversión Educ. Técnica. educacionsuperior.gob.ec</div>
+    <div>• SENESCYT. (2023). Acuerdo Nro. 2023-0033-AC (Carreras Interés Público). educacionsuperior.gob.ec</div>
+    <div>• Neufert E. (2013). Arte de proyectar en arquitectura, 16ª ed. Gustavo Gili.</div>
+    <div>• CES Ecuador. (2022). Reglamento de Régimen Académico. ces.gob.ec</div>
+    <div>• FAO. (2018). Infraestructura para centros de capacitación agropecuaria. fao.org</div>
+    <div>• FAO. (2021). Establishing and managing school gardens. fao.org</div>
+    <div>• MAATE Ecuador. (2021). Manual protocolos viveros forestales comunitarios. ambiente.gob.ec</div>
+    <div>• OIT/Cinterfor. (2017). El futuro de la FP en ALC. ISBN: 978-92-9088-274-9. oitcinterfor.org</div>
+    <div>• Instituto Tec. Superior Riobamba. (2024). Estructura académica. istriobamba.edu.ec</div>
+    <div>• Open House Porto. (2024). FEUP — campus sin muros. openhouseporto.com (ref. 9 m²/est.)</div>
+    <div>• Secretaría Nacional de Planificación. (2021). Mesas de Participación Zona 6. planificacion.gob.ec</div>
+    <div>• WEF. (2025). Future of Jobs Report 2025 (+34M empleos agropecuarios al 2030). weforum.org</div>
+    <div>• LOES Ecuador. (2022). Art. 107 (vinculación) · Art. 356 (accesibilidad). ces.gob.ec</div>
+    <div>• PUGS GAD Cuenca / ONU Habitat. (2019). Plan de Uso y Gestión del Suelo. cuenca.gob.ec</div>
+  </div>
+  <div style="margin-top:10px;display:flex;justify-content:space-between">
+    <span>Programa Arquitectónico — Facultad 1: Ecología, Geología y Recursos Naturales · Campus Técnico Interprovincial Zona 6</span>
+    <span>Michelle Marín · Esteban Ortíz · Nayeli León · <strong>Proyectos VI · 2025</strong></span>
+  </div>
+</div>
+
+</body>
+</html>
